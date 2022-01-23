@@ -12,8 +12,7 @@ nbproject
 # windows thumbnail cache
 Thumbs.db
 
-# composer vendor dir
-/vendor
+
 
 # composer itself is not needed
 composer.phar
@@ -29,13 +28,18 @@ phpunit.phar
 backend/tests/_output/.gitignore
 tests/_support/_generated
 
-#vagrant folder
-*/.vagrant
 
 #NodeJS modules
-*/node_modules
+/api_parser/node_modules
 
 #Backend
-*/vendor
-backend/config/db.php
+/backend/.vagrant
+/backend/vendor
+/backend/config/db.php
+
+
+#Identical files
+*/.idea
+
+#Сommon Files
 /database/

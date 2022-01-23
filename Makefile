@@ -1,4 +1,6 @@
 up:
+	docker stop $$(docker ps -aq)
+	sudo chmod 777 -R database
 	docker-compose up
 up-dev:
 	docker-compose -f docker-compose.dev.yml up -d

@@ -2,14 +2,37 @@
 
 namespace components\parser\factory;
 
-use components\parser\ParserA;
+use components\parser\enum\ParserEnum;
+use components\parser\eParts\Parser;
+use components\parser\exception\ParserException;
 use components\parser\ParserInterface;
 
 class ParserFactory implements ParserFactoryInterface
 {
-
-    public function make(): ParserInterface
+    /**
+     * {@inheritDoc}
+     */
+    public function make(string $parser): ParserInterface
     {
-        return new ParserA();
+        return $this->getParser($parser);
+    }
+
+    /**
+     * @param string $parser
+     * @return ParserInterface
+     * @throws ParserException
+     */
+    private function getParser(string $parser): ParserInterface
+    {
+        $parserlist = [
+            ParserEnum::EPARTS_PARSER => new Parser(),
+            ParserEnum::AGCOCORP_PARSER => new Parser(),
+        ];
+
+        if(isset($parserlist[$parser])) {
+            return $parserlist[$parser];
+        } else {
+            ParserException::parserNotFound($parser);
+        }
     }
 }

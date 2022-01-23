@@ -4,5 +4,10 @@ namespace components\parser;
 
 interface ParserInterface
 {
-    public function run(string $action);
+    /**
+     * @param string $action
+     * @return void
+     */
+    public function run(string $action): void;
+
 }
