@@ -9,6 +9,7 @@ up-local:
 
 build:
 	rm -rf runtime/dockerLogs/*
+	sudo chmod 777 -R database
 	docker-compose -f docker-compose.yml build
 
 build-dev:
