@@ -1,5 +1,6 @@
 import {ParserHeaderConfigInterface} from "../config/ParserConfig"
 import {Axios} from "axios";
+import {BrandDto} from "../dto/BrandDto";
 
 export interface BrandItemInterface {
     brandId: number,
@@ -8,7 +9,7 @@ export interface BrandItemInterface {
 }
 
 interface BrandsInterface {
-    get(): BrandItemInterface[];
+    get(dto: BrandDto): BrandItemInterface[];
 }
 
 export class Brands implements BrandsInterface {
@@ -18,9 +19,8 @@ export class Brands implements BrandsInterface {
     constructor(private readonly parserConfig: ParserHeaderConfigInterface) {
     }
 
-
     // @ts-ignore
-    async get(): Promise<BrandItemInterface[]> {
+    async get(dto: BrandDto): Promise<BrandItemInterface[]> {
         let url = this.parserConfig.apiUrl + Brands.apiMethod;
         let userId = this.parserConfig.header.userId;
         let axios = new Axios({

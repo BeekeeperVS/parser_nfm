@@ -1,5 +1,6 @@
 import {ParserHeaderConfigInterface} from "../config/ParserConfig"
 import {Axios} from "axios";
+import {ProductTypeDto} from "../dto/ProductTypeDto";
 
 export interface ProductTypeItemInterface {
     productTypeDescription: string
@@ -9,7 +10,7 @@ export interface ProductTypeItemInterface {
 interface ProductTypesInterface {
     apiMethod: string;
 
-    get(): ProductTypeItemInterface[];
+    get(dto: ProductTypeDto): ProductTypeItemInterface[];
 }
 
 export class ProductTypes implements ProductTypesInterface {
@@ -20,7 +21,7 @@ export class ProductTypes implements ProductTypesInterface {
     }
 
     // @ts-ignore
-    async get(): Promise<ProductTypesInterface[]> {
+    async get(dto: ProductTypeDto): Promise<ProductTypesInterface[]> {
 
         let url = this.parserConfig.apiUrl + ProductTypes.apiMethod;
 
@@ -29,7 +30,7 @@ export class ProductTypes implements ProductTypesInterface {
                 userId: this.parserConfig.header.userId,
                 language: this.parserConfig.header.language,
                 regionId: this.parserConfig.header.regionId,
-                brandId: 2,
+                brandId: dto.brandId,
             }
         });
         let response = await axios.get(url);

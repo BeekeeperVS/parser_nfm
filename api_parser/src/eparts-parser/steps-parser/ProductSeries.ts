@@ -1,30 +1,31 @@
 import {ParserHeaderConfigInterface} from "../config/ParserConfig"
 import {Axios} from "axios";
-import {ProductLineDto} from "../dto/ProductLineDto";
+import {ProductSeriesDto} from "../dto/ProductSeriesDto";
 
-export interface ProductLinesItemInterface {
-    ProductLinesDescription: string
-    ProductLinesId: string
+export interface ProductSeriesItemInterface {
+    seriesDescription: string
+    seriesId: string
 }
 
-interface ProductLinesInterface {
-    get(dto: ProductLineDto): ProductLinesItemInterface[];
+interface ProductSeriesInterface {
+    get(dto: ProductSeriesDto): ProductSeriesItemInterface[];
 }
 
-export class ProductLines implements ProductLinesInterface {
+export class ProductSeries implements ProductSeriesInterface {
 
-    static apiMethod = '/equipment/productLines';
+    static apiMethod = '/equipment/series';
 
     constructor(private readonly parserConfig: ParserHeaderConfigInterface) {
     }
 
     // @ts-ignore
-    async get(dto: ProductLineDto): Promise<ProductLinesItemInterface[]> {
+    async get(dto: ProductSeriesDto): Promise<ProductSeriesItemInterface[]> {
 
-        let url = this.parserConfig.apiUrl + ProductLines.apiMethod;
+        let url = this.parserConfig.apiUrl + ProductSeries.apiMethod;
 
         const urlRequest = new URL(url);
         urlRequest.searchParams.append("productTypeId", dto.productTypeId);
+        urlRequest.searchParams.append("productLineId", dto.productLineId);
 
         let axios = new Axios({
             headers: {
@@ -39,5 +40,3 @@ export class ProductLines implements ProductLinesInterface {
         return JSON.parse(response.data);
     }
 }
-
-
