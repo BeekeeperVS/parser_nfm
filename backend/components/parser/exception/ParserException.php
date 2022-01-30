@@ -31,4 +31,21 @@ class ParserException extends \Exception
             $parser
         ));
     }
+
+
+    /**
+     * @param string $parser
+     * @param string $action
+     * @return void
+     * @throws ParserException
+     */
+    public static function stepNotFound(string $parser, string $action, string $step): void
+    {
+        throw new self(sprintf(
+            "Step <%s> NotFound in parser <%s>.<%s>",
+            $step,
+            $parser,
+            $action
+        ));
+    }
 }

@@ -1,0 +1,7 @@
+YII_DEBUG = true
+YII_ENV = dev
+IP_SERVER = 192.168.31.135
+
+PARSER_STATUS = start
+API_HOST = http://api.nfm.local/
+API_EPART_CONTROLLER = 'eparts-parser'

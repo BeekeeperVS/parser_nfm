@@ -8,6 +8,22 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'app\commands',
+    'controllerMap' => [
+        'migrate-eparts' => [
+            'class' => yii\console\controllers\MigrateController::class,
+            'migrationPath' => '@app/migrations/parser',
+            'templateFile' => '@app/service/migration/views/migrationTemplate.php',
+            'migrationTable' => '{{%system_migration}}',
+            'db' => 'db'
+        ],
+        'migrate-catalog' => [
+            'class' => yii\console\controllers\MigrateController::class,
+            'migrationPath' => '@app/migrations/catalog',
+            'templateFile' => '@app/service/migration/views/migrationTemplate.php',
+            'migrationTable' => '{{%system_migration}}',
+            'db' => 'db2'
+        ],
+    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -25,7 +41,8 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
+        'db' => $db['db'],
+        'db2' => $db['db2']
     ],
     'params' => $params,
     /*

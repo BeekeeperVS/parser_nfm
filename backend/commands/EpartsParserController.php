@@ -3,10 +3,10 @@
 namespace app\commands;
 
 use components\parser\enum\ParserEnum;
-use components\parser\eParts\enum\ParserActionEnum;
+use components\parser\eParts\enum\ActionEPartsEnum;
 use components\parser\factory\ParserFactory;
 
-class ParserController extends \yii\console\Controller
+class EpartsParserController extends \yii\console\Controller
 {
     /**
      * @return void
@@ -15,7 +15,7 @@ class ParserController extends \yii\console\Controller
     public function actionTest() {
         $parserFactory = new ParserFactory();
         $parser = $parserFactory->make(ParserEnum::EPARTS_PARSER);
-        $parser->run(ParserActionEnum::PARSER_CATALOG_ACTION);
+        $parser->run(ActionEPartsEnum::PARSER_CATALOG_ACTION);
 
         print_r("\n");
     }

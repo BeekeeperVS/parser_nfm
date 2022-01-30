@@ -5,7 +5,7 @@ namespace components\parser\eParts\enum;
 use components\parser\enum\EnumInterface;
 use JetBrains\PhpStorm\ArrayShape;
 
-final class ParserActionEnum extends ePartsBaseEnum
+final class ActionEPartsEnum extends EPartsBaseEnum
 {
     public const PARSER_CATALOG_ACTION = 'catalog';
 

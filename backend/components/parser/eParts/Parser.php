@@ -3,7 +3,7 @@
 namespace components\parser\eParts;
 
 use components\parser\eParts\actions\ParserCatalogAction;
-use components\parser\eParts\enum\ParserActionEnum;
+use components\parser\eParts\enum\ActionEPartsEnum;
 use components\parser\exception\ParserException;
 use components\parser\ParserActionInterface;
 
@@ -28,7 +28,7 @@ class Parser implements ePartsParserInterface
     {
         /** @var array $actionList */
         $actionList = [
-            ParserActionEnum::PARSER_CATALOG_ACTION => new ParserCatalogAction(),
+            ActionEPartsEnum::PARSER_CATALOG_ACTION => new ParserCatalogAction(),
         ];
         if(isset($actionList[$action])) {
             return $actionList[$action];

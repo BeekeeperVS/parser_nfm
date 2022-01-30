@@ -2,7 +2,7 @@
 
 namespace components\parser\eParts\steps;
 
-class Authorization extends ePartsBaseStep
+class Authorization extends EPartsBaseStep
 {
     /**
      * {@inheritDoc}
