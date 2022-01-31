@@ -20,10 +20,24 @@ final class ParserCatalogAction extends EPartsBaseAction
 //            StepEpartsEnum::BRANDS_STEP,
 //            []
 //        );
+
+
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::PRODUCT_TYPES_STEP,
+//            [
+//                'brandId' => 2,
+//                'interiorBrandId' => 1
+//            ]
+//        );
+
+
         $stepParser = $stepFactory->makeStep(
-            StepEpartsEnum::PRODUCT_TYPES_STEP,
+            StepEpartsEnum::PRODUCT_LINES_STEP,
             [
-                'brandId' => 2
+                'brandId' => 1,
+                'epBrandId' => 2,
+                'typeId' => 9,
+                'epTypeId' => 'EU_B_M'
             ]
         );
         $stepParser->run();

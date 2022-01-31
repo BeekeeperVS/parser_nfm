@@ -11,6 +11,9 @@ class ProductTypes extends EPartsBaseStep
     /** @var int $brandId */
     public $brandId;
 
+    /** @var int $interiorBrandId */
+    public $epBrandId;
+
     /**
      * @inheritDoc
      */
@@ -49,10 +52,8 @@ class ProductTypes extends EPartsBaseStep
             $brandsList = Json::decode($response)['productTypes'];
             $batchParams = [];
             foreach ($brandsList as $item) {
-                //brand_id
-                //ep_id
-                //description
-                $batchParams[] = [1, $item['productTypeId'], $item['productTypeDescription']];
+
+                $batchParams[] = [$this->brandId, $item['productTypeId'], $item['productTypeDescription']];
             }
             \Yii::$app->db->createCommand()->batchInsert('{{%ep_product_type}}', ['brand_id', 'ep_id', 'description'], $batchParams)->execute();
         }

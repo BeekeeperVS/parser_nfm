@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./database/mysql:/var/lib/mysql
-#      - ./docker/mysql/dumps:/dumps
+      - ./docker/mysql/dumps:/dumps
 #      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"

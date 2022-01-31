@@ -16,3 +16,9 @@ build-dev:
 	docker-compose -f docker-compose.dev.yml build
 build-local:
 	docker-compose -f docker-compose.local.yml build
+
+init-db:
+	docker exec -it nfm_mysql_db bash -c "mysql --user=root nfm_catalog < /dumps/nfm-catalog.sql"
+
+ip-server
+	sudo ifconfig | grep "inet "
