@@ -6,56 +6,45 @@ use yii\helpers\Json;
 
 class ProductTypes extends EPartsBaseStep
 {
-    const API_METHOD = "/product-types";
 
-    /** @var int $brandId */
-    public $brandId;
+    public int $brandId;
+    public int $epBrandId;
 
-    /** @var int $interiorBrandId */
-    public $epBrandId;
+    /**
+     * @param $config
+     */
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+        $this->setApiMethod('product-types');
+    }
 
     /**
      * @inheritDoc
      */
     public function run(): void
     {
+        parent::run();
 
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => env("API_HOST") . env('API_EPART_CONTROLLER') . self::API_METHOD,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 10,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => Json::encode([
-                "brandId" => $this->brandId
-            ]),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            print_r("cURL Error #:" . $err);
-        } else {
-            print_r($response);
-
-            $brandsList = Json::decode($response)['productTypes'];
-            $batchParams = [];
-            foreach ($brandsList as $item) {
-
-                $batchParams[] = [$this->brandId, $item['productTypeId'], $item['productTypeDescription']];
-            }
-            \Yii::$app->db->createCommand()->batchInsert('{{%ep_product_type}}', ['brand_id', 'ep_id', 'description'], $batchParams)->execute();
+        if ($this->isSuccess()) {
+            $productTypes = $this->getResponseParam('productTypes');
         }
+        $batchParams = [];
+        foreach ($productTypes as $item) {
+
+            $batchParams[] = [$this->brandId, $item['productTypeId'], $item['productTypeDescription']];
+        }
+        \Yii::$app->db->createCommand()->batchInsert('{{%ep_product_type}}', ['brand_id', 'ep_id', 'description'], $batchParams)->execute();
+
+    }
+
+    /**
+     * @return array
+     */
+    public function makeDataRequest(): array
+    {
+        return [
+            'brandId' => $this->epBrandId
+        ];
     }
 }

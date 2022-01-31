@@ -31,15 +31,65 @@ final class ParserCatalogAction extends EPartsBaseAction
 //        );
 
 
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::PRODUCT_LINES_STEP,
+//            [
+//                'brandId' => 1,
+//                'epBrandId' => 2,
+//                'typeId' => 9,
+//                'epTypeId' => 'EU_B_M'
+//            ]
+//        );
+
+
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::PRODUCT_LINES_STEP,
+//            [
+//                'brandId' => 1,
+//                'epBrandId' => 2,
+//                'typeId' => 9,
+//                'epTypeId' => 'EU_B_M'
+//            ]
+//        );
+
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::PRODUCT_SERIES_STEP,
+//            [
+//                'brandId' => 1,
+//                'typeId' =>  9,
+//                'lineId' => 4,
+//                'epBrandId' => 2,
+//                'epTypeId' => 'EU_B_M',
+//                'epLineId' => 'EU_B_M_33_FOR'
+//            ]
+//        );
+
+
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::PRODUCT_MODELS_STEP,
+//            [
+//                'brandId' => 1,
+//                'typeId' =>  9,
+//                'lineId' => 4,
+//                'seriesId' => 1,
+//                'epBrandId' => 2,
+//                'epTypeId' => 'EU_B_M',
+//                'epLineId' => 'EU_B_M_33_FOR',
+//                'epSeriesId' => 'EU_B_M_33_FOR_095_675'
+//            ]
+//        );
+
         $stepParser = $stepFactory->makeStep(
-            StepEpartsEnum::PRODUCT_LINES_STEP,
+            StepEpartsEnum::MODEL_FUNCTIONAL_GROUPS_STEP,
             [
                 'brandId' => 1,
+                'modelId' =>  9,
                 'epBrandId' => 2,
-                'typeId' => 9,
-                'epTypeId' => 'EU_B_M'
+                'epModelId' => '22F9724F-E6BE-E111-9FCE-005056875BD6',
             ]
         );
+
+
         $stepParser->run();
 
     }

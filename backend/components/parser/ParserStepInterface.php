@@ -9,9 +9,5 @@ interface ParserStepInterface
      */
     public function run(): void;
 
-    /**
-     * @return bool
-     */
-    public function isSuccess(): bool;
 
 }
