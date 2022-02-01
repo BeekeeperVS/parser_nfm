@@ -1,5 +1,5 @@
 up:
-	docker stop $$(docker ps -aq)
+	# docker stop $$(docker ps -aq)
 	sudo chmod 777 -R database
 	docker-compose up
 up-dev:
@@ -20,5 +20,5 @@ build-local:
 init-db:
 	docker exec -it nfm_mysql_db bash -c "mysql --user=root nfm_catalog < /dumps/nfm-catalog.sql"
 
-ip-server
+ip-server:
 	sudo ifconfig | grep "inet "

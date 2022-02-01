@@ -2,6 +2,7 @@
 
 namespace components\parser\eParts\actions;
 
+use app\models\eparts\EpModelFunctionalGroup;
 use components\parser\eParts\enum\StepEpartsEnum;
 use components\parser\eParts\steps\factory\EPartsStepParserFactory;
 
@@ -79,13 +80,26 @@ final class ParserCatalogAction extends EPartsBaseAction
 //            ]
 //        );
 
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::MODEL_FUNCTIONAL_GROUPS_STEP,
+//            [
+//                'brandId' => 1,
+//                'modelId' =>  9,
+//                'epBrandId' => 2,
+//                'epModelId' => '22F9724F-E6BE-E111-9FCE-005056875BD6',
+//            ]
+//        );
+
+        $modelFunctionalGroup = EpModelFunctionalGroup::findOne(1);
         $stepParser = $stepFactory->makeStep(
-            StepEpartsEnum::MODEL_FUNCTIONAL_GROUPS_STEP,
+            StepEpartsEnum::MODEL_ASSEMBLIES_STEP,
             [
-                'brandId' => 1,
-                'modelId' =>  9,
-                'epBrandId' => 2,
-                'epModelId' => '22F9724F-E6BE-E111-9FCE-005056875BD6',
+                'brandId' => $modelFunctionalGroup->productModel->type->brand->id,
+                'modelId' => $modelFunctionalGroup->productModel->id,
+                'epBrandId' => $modelFunctionalGroup->productModel->type->brand->ep_id,
+                'epModelId' => $modelFunctionalGroup->productModel->ep_id,
+                'epFunctionalGroupId' => $modelFunctionalGroup->functionalGroup->ep_id,
+                'epIsTechnicalTypeDriven' => $modelFunctionalGroup->productModel->is_technical_type_driven
             ]
         );
 
