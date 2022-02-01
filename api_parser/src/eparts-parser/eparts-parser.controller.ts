@@ -93,7 +93,6 @@ export class EpartsParserController {
 
     @Post('assembly-details')
     async assemblyDetails(@Body() assemblyDetailsDto: AssemblyDetailsDto, @Res() res: Response) {
-        console.log('assemblyDetails');
         let stepModel = new AssemblyDetails(parserConfig());
         let assemblyDetails = await stepModel.get(assemblyDetailsDto);
         res.send({status: true, assemblyDetails: assemblyDetails});
@@ -104,7 +103,7 @@ export class EpartsParserController {
     async assemblyParts(@Body() assemblyPartsDto: AssemblyPartsDto, @Res() res: Response) {
         let stepModel = new AssemblyParts(parserConfig());
         let assemblyParts = await stepModel.get(assemblyPartsDto);
-        res.send({status: true, assemblyParts: assemblyParts});
+        res.send({status: true, assemblyParts: assemblyParts.parts});
         return true;
     }
 

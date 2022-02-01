@@ -104,9 +104,23 @@ final class ParserCatalogAction extends EPartsBaseAction
 //            ]
 //        );
 
-        $assembly = EpAssembly::findOne(1);
+//        $assembly = EpAssembly::findOne(1);
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::ASSEMBLY_DETAILS_STEP,
+//            [
+//                'brandId' => $assembly->modelFunctionalGroup->productModel->type->brand->id,
+//                'modelId' => $assembly->modelFunctionalGroup->productModel->id,
+//                'assemblyId' => $assembly->id,
+//                'epBrandId' => $assembly->modelFunctionalGroup->productModel->type->brand->ep_id,
+//                'epModelId' => $assembly->modelFunctionalGroup->productModel->ep_id,
+//                'epAssemblyId' => $assembly->ep_id,
+//                'epIsTechnicalTypeDriven' => $assembly->modelFunctionalGroup->productModel->is_technical_type_driven
+//            ]
+//        );
+
+        $assembly = EpAssembly::findOne(3);
         $stepParser = $stepFactory->makeStep(
-            StepEpartsEnum::ASSEMBLY_DETAILS_STEP,
+            StepEpartsEnum::ASSEMBLY_PARTS_STEP,
             [
                 'brandId' => $assembly->modelFunctionalGroup->productModel->type->brand->id,
                 'modelId' => $assembly->modelFunctionalGroup->productModel->id,
@@ -114,7 +128,9 @@ final class ParserCatalogAction extends EPartsBaseAction
                 'epBrandId' => $assembly->modelFunctionalGroup->productModel->type->brand->ep_id,
                 'epModelId' => $assembly->modelFunctionalGroup->productModel->ep_id,
                 'epAssemblyId' => $assembly->ep_id,
-                'epIsTechnicalTypeDriven' => $assembly->modelFunctionalGroup->productModel->is_technical_type_driven
+                'epIsTechnicalTypeDriven' => $assembly->modelFunctionalGroup->productModel->is_technical_type_driven,
+                'functionalGroupId' => $assembly->modelFunctionalGroup->functionalGroup->id,
+                'epFunctionalGroupId' => $assembly->modelFunctionalGroup->functionalGroup->ep_id,
             ]
         );
 

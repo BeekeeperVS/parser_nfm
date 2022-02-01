@@ -57,7 +57,8 @@ class EpPart extends \app\service\db\ActiveRecordService
     {
         return [
             [['assembly_id'], 'required'],
-            [['assembly_id', 'alternative_indicator', 'component_indicator', 'is_in_working_list', 'kit_indicator', 'notes', 'reman_indicator', 'substitution_indicator', 'status_parser'], 'integer'],
+            [['assembly_id', 'status_parser'], 'integer'],
+            [['alternative_indicator','component_indicator','is_in_working_list','kit_indicator','notes','reman_indicator','substitution_indicator'], 'boolean'],
             [['technical_description', 'image', 'technical_image'], 'string'],
             [['details', 'substitutions', 'kits', 'created_at', 'updated_at'], 'safe'],
             [['ep_id', 'number', 'description', 'quantity', 'reference_number', 'sequence_number', 'sku_global', 'substitution_code', 'substitution_type', 'ep_assembly_id', 'ep_assembly_part_list_id', 'usage'], 'string', 'max' => 255],

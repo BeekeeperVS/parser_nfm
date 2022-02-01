@@ -22,11 +22,11 @@ interface ParsAssemblyInterface {
     partNumber: string;//"87802906"
     quantity: string;//"1"
     referenceNumber: string;//"2"
-    remanIndicator: false
+    remanIndicator: false;
     sequence_number: string;//495760
     skuGlobal: string;//"87802906"
     substitutionCode: string;//"0"
-    substitutionIndicator: true
+    substitutionIndicator: true;
     substitutionType: string;//"P"
     technicalDescription: string;//" "
     technicalImage: boolean;//false
@@ -42,7 +42,13 @@ interface AssemblyPartsInterface {
 export class AssemblyParts {
 
     static apiMethod = '/parts/byAssembly';
-
+    // v1/parts/byAssembly
+    // assemblyId=4BC120B1-B8BF-E111-9FCE-005056875BD6&modelId=22F9724F-E6BE-E111-9FCE-005056875BD6
+    // serialNumberId=undefined
+    // imageType=large
+    // isTechnicalTypeDriven=false
+    // filterForSN=false
+    // functionalGroupId=22F9724F-E6BE-E111-9FCE-005056875BD6_01_ENGINE
     constructor(private readonly parserConfig: ParserHeaderConfigInterface) {
     }
 
@@ -52,23 +58,26 @@ export class AssemblyParts {
 
         const urlRequest = new URL(url);
         urlRequest.searchParams.append("assemblyId", dto.assemblyId);
-        urlRequest.searchParams.append("serialNumberId", String(dto.serialNumberId));
-        urlRequest.searchParams.append("imageType", String(dto.imageType));
+        urlRequest.searchParams.append("modelId", dto.modelId);
+        urlRequest.searchParams.append("serialNumberId", dto.serialNumberId);
+        urlRequest.searchParams.append("imageType", dto.imageType);
         urlRequest.searchParams.append("isTechnicalTypeDriven", String(dto.isTechnicalTypeDriven));
         urlRequest.searchParams.append("filterForSN", String(dto.filterForSN));
         urlRequest.searchParams.append("functionalGroupId", String(dto.functionalGroupId));
 
-
+        console.log(urlRequest.href);
         let axios = new Axios({
             headers: {
                 userId: this.parserConfig.header.userId,
                 language: this.parserConfig.header.language,
                 regionId: this.parserConfig.header.regionId,
                 brandId: dto.brandId,
+                regionGroupId: '2,3,5,7,10,11,13,14,17,18,21,22,25,26,29,30',
             }
         });
 
         let response = await axios.get(urlRequest.href);
+        console.log(response);
         return JSON.parse(response.data);
     }
 
