@@ -91,8 +91,9 @@ export class EpartsParserController {
         return true;
     }
 
-    @Post('details-assembly')
-    async detailsAssembly(@Body() assemblyDetailsDto: AssemblyDetailsDto, @Res() res: Response) {
+    @Post('assembly-details')
+    async assemblyDetails(@Body() assemblyDetailsDto: AssemblyDetailsDto, @Res() res: Response) {
+        console.log('assemblyDetails');
         let stepModel = new AssemblyDetails(parserConfig());
         let assemblyDetails = await stepModel.get(assemblyDetailsDto);
         res.send({status: true, assemblyDetails: assemblyDetails});

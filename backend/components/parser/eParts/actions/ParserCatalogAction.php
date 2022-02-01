@@ -2,6 +2,7 @@
 
 namespace components\parser\eParts\actions;
 
+use app\models\eparts\EpAssembly;
 use app\models\eparts\EpModelFunctionalGroup;
 use components\parser\eParts\enum\StepEpartsEnum;
 use components\parser\eParts\steps\factory\EPartsStepParserFactory;
@@ -90,16 +91,30 @@ final class ParserCatalogAction extends EPartsBaseAction
 //            ]
 //        );
 
-        $modelFunctionalGroup = EpModelFunctionalGroup::findOne(1);
+//        $modelFunctionalGroup = EpModelFunctionalGroup::findOne(1);
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::MODEL_ASSEMBLIES_STEP,
+//            [
+//                'brandId' => $modelFunctionalGroup->productModel->type->brand->id,
+//                'modelId' => $modelFunctionalGroup->productModel->id,
+//                'epBrandId' => $modelFunctionalGroup->productModel->type->brand->ep_id,
+//                'epModelId' => $modelFunctionalGroup->productModel->ep_id,
+//                'epFunctionalGroupId' => $modelFunctionalGroup->functionalGroup->ep_id,
+//                'epIsTechnicalTypeDriven' => $modelFunctionalGroup->productModel->is_technical_type_driven
+//            ]
+//        );
+
+        $assembly = EpAssembly::findOne(1);
         $stepParser = $stepFactory->makeStep(
-            StepEpartsEnum::MODEL_ASSEMBLIES_STEP,
+            StepEpartsEnum::ASSEMBLY_DETAILS_STEP,
             [
-                'brandId' => $modelFunctionalGroup->productModel->type->brand->id,
-                'modelId' => $modelFunctionalGroup->productModel->id,
-                'epBrandId' => $modelFunctionalGroup->productModel->type->brand->ep_id,
-                'epModelId' => $modelFunctionalGroup->productModel->ep_id,
-                'epFunctionalGroupId' => $modelFunctionalGroup->functionalGroup->ep_id,
-                'epIsTechnicalTypeDriven' => $modelFunctionalGroup->productModel->is_technical_type_driven
+                'brandId' => $assembly->modelFunctionalGroup->productModel->type->brand->id,
+                'modelId' => $assembly->modelFunctionalGroup->productModel->id,
+                'assemblyId' => $assembly->id,
+                'epBrandId' => $assembly->modelFunctionalGroup->productModel->type->brand->ep_id,
+                'epModelId' => $assembly->modelFunctionalGroup->productModel->ep_id,
+                'epAssemblyId' => $assembly->ep_id,
+                'epIsTechnicalTypeDriven' => $assembly->modelFunctionalGroup->productModel->is_technical_type_driven
             ]
         );
 
