@@ -40,7 +40,7 @@ class m220131_122538_create_table_product_model extends MigrationService
 
         $this->addForeignKey('fk-ep_product_model-type_id', '{{%ep_product_model}}', 'type_id', '{{%ep_product_type}}', 'id', 'CASCADE');
         $this->addForeignKey('fk-ep_product_model-line_id', '{{%ep_product_model}}', 'line_id', '{{%ep_product_line}}', 'id', 'CASCADE');
-        $this->addForeignKey('fk-ep_product_model-series_id', '{{%ep_product_model}}', 'line_id', '{{%ep_product_series}}', 'id', 'CASCADE');
+        $this->addForeignKey('fk-ep_product_model-series_id', '{{%ep_product_model}}', 'series_id', '{{%ep_product_series}}', 'id', 'CASCADE');
     }
 
     /**

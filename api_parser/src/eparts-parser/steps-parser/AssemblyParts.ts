@@ -42,13 +42,7 @@ interface AssemblyPartsInterface {
 export class AssemblyParts {
 
     static apiMethod = '/parts/byAssembly';
-    // v1/parts/byAssembly
-    // assemblyId=4BC120B1-B8BF-E111-9FCE-005056875BD6&modelId=22F9724F-E6BE-E111-9FCE-005056875BD6
-    // serialNumberId=undefined
-    // imageType=large
-    // isTechnicalTypeDriven=false
-    // filterForSN=false
-    // functionalGroupId=22F9724F-E6BE-E111-9FCE-005056875BD6_01_ENGINE
+
     constructor(private readonly parserConfig: ParserHeaderConfigInterface) {
     }
 

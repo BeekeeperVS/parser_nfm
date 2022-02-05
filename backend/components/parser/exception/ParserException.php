@@ -26,7 +26,7 @@ class ParserException extends \Exception
     public static function actionNotFound(string $parser, string $action): void
     {
         throw new self(sprintf(
-            "Action <%s> NotFound in parser <%s>",
+            "Action <%s> NotFound in eparts <%s>",
             $action,
             $parser
         ));
@@ -42,7 +42,7 @@ class ParserException extends \Exception
     public static function stepNotFound(string $parser, string $action, string $step): void
     {
         throw new self(sprintf(
-            "Step <%s> NotFound in parser <%s>.<%s>",
+            "Step <%s> NotFound in eparts <%s>.<%s>",
             $step,
             $parser,
             $action

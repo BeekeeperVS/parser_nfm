@@ -2,13 +2,16 @@
 
 namespace components\parser\eParts\actions;
 
+use app\models\common\service\ParserStep;
 use app\models\eparts\EpAssembly;
 use app\models\eparts\EpModelFunctionalGroup;
+use components\parser\enum\ParserEnum;
 use components\parser\eParts\enum\StepEpartsEnum;
 use components\parser\eParts\steps\factory\EPartsStepParserFactory;
 
 final class ParserCatalogAction extends EPartsBaseAction
 {
+    public const ACTION_TITLE = 'catalog';
 
     /**
      * @return void
@@ -18,11 +21,20 @@ final class ParserCatalogAction extends EPartsBaseAction
     public function run()
     {
         $stepFactory = new EPartsStepParserFactory();
-//        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::BRANDS_STEP,
-//            []
-//        );
+        $parserStep = ParserStep::find()->currentStep();
 
+        if (!empty($parserStep)) {
+            $stepParser = $stepFactory->makeStep(self::ACTION_TITLE, $parserStep->title);
+            $stepParser->run();
+            if (!empty($parserStep->childSteps)) {
+                foreach ($parserStep->childSteps as $childStep) {
+                    $childStepParser = $stepFactory->makeStep(self::ACTION_TITLE, $childStep->title);
+                    $childStepParser->run();
+                }
+            }
+        } else {
+            print_r("eParts COMPLETE\n");
+        }
 
 //        $stepParser = $stepFactory->makeStep(
 //            StepEpartsEnum::PRODUCT_TYPES_STEP,
@@ -118,31 +130,98 @@ final class ParserCatalogAction extends EPartsBaseAction
 //            ]
 //        );
 
-        $assembly = EpAssembly::findOne(3);
-        $stepParser = $stepFactory->makeStep(
-            StepEpartsEnum::ASSEMBLY_PARTS_STEP,
-            [
-                'brandId' => $assembly->modelFunctionalGroup->productModel->type->brand->id,
-                'modelId' => $assembly->modelFunctionalGroup->productModel->id,
-                'assemblyId' => $assembly->id,
-                'epBrandId' => $assembly->modelFunctionalGroup->productModel->type->brand->ep_id,
-                'epModelId' => $assembly->modelFunctionalGroup->productModel->ep_id,
-                'epAssemblyId' => $assembly->ep_id,
-                'epIsTechnicalTypeDriven' => $assembly->modelFunctionalGroup->productModel->is_technical_type_driven,
-                'functionalGroupId' => $assembly->modelFunctionalGroup->functionalGroup->id,
-                'epFunctionalGroupId' => $assembly->modelFunctionalGroup->functionalGroup->ep_id,
-            ]
-        );
+//        $assembly = EpAssembly::findOne(3);
+//        $stepParser = $stepFactory->makeStep(
+//            StepEpartsEnum::ASSEMBLY_PARTS_STEP,
+//            [
+//                'brandId' => $assembly->modelFunctionalGroup->productModel->type->brand->id,
+//                'modelId' => $assembly->modelFunctionalGroup->productModel->id,
+//                'assemblyId' => $assembly->id,
+//                'epBrandId' => $assembly->modelFunctionalGroup->productModel->type->brand->ep_id,
+//                'epModelId' => $assembly->modelFunctionalGroup->productModel->ep_id,
+//                'epAssemblyId' => $assembly->ep_id,
+//                'epIsTechnicalTypeDriven' => $assembly->modelFunctionalGroup->productModel->is_technical_type_driven,
+//                'functionalGroupId' => $assembly->modelFunctionalGroup->functionalGroup->id,
+//                'epFunctionalGroupId' => $assembly->modelFunctionalGroup->functionalGroup->ep_id,
+//            ]
+//        );
 
 
-        $stepParser->run();
+//        $stepParser->run();
 
     }
 
-    private function orderStepParser(): array
+    /**
+     * @return array
+     */
+    public static function orderStepParser(): array
     {
         return [
-
+            [
+                'step' => StepEpartsEnum::LOGIN_STEP,
+                'parentStep' => null,
+                'sortOrder' => 1
+            ],
+            [
+                'step' => StepEpartsEnum::BRANDS_STEP,
+                'parentStep' => null,
+                'sortOrder' => 2
+            ],
+            [
+                'step' => StepEpartsEnum::PRODUCT_TYPES_STEP,
+                'parentStep' => null,
+                'sortOrder' => 3
+            ],
+            [
+                'step' => StepEpartsEnum::PRODUCT_LINES_STEP,
+                'parentStep' => null,
+                'sortOrder' => 4
+            ],
+            [
+                'step' => StepEpartsEnum::PRODUCT_SERIES_STEP,
+                'parentStep' => null,
+                'sortOrder' => 5
+            ],
+            [
+                'step' => StepEpartsEnum::PRODUCT_MODELS_STEP,
+                'parentStep' => null,
+                'sortOrder' => 6
+            ],
+            [
+                'step' => StepEpartsEnum::MODEL_FUNCTIONAL_GROUPS_STEP,
+                'parentStep' => null,
+                'sortOrder' => 7
+            ],
+            [
+                'step' => StepEpartsEnum::MODEL_ASSEMBLIES_STEP,
+                'parentStep' => null,
+                'sortOrder' => 8
+            ],
+            [
+                'step' => StepEpartsEnum::ASSEMBLY_PARTS_STEP,
+                'parentStep' => null,
+                'sortOrder' => 9
+            ],
+            [
+                'step' => StepEpartsEnum::ASSEMBLY_DETAILS_STEP,
+                'parentStep' => StepEpartsEnum::ASSEMBLY_PARTS_STEP,
+                'sortOrder' => 10
+            ],
+            [
+                'step' => StepEpartsEnum::PART_DETAILS_STEP,
+                'parentStep' => null,
+                'sortOrder' => 10
+            ],
+            [
+                'step' => StepEpartsEnum::PART_SUBSTITUTIONS_STEP,
+                'parentStep' => StepEpartsEnum::PART_DETAILS_STEP,
+                'sortOrder' => 12
+            ],
+            [
+                'step' => StepEpartsEnum::PART_KITS_STEP,
+                'parentStep' => StepEpartsEnum::PART_DETAILS_STEP,
+                'sortOrder' => 13
+            ]
         ];
     }
 }

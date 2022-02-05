@@ -2,13 +2,14 @@
 
 namespace components\parser\eParts\steps;
 
+use app\models\eparts\service\EpBrand;
+use app\models\common\service\ParserStep;
+use components\parser\eParts\enum\StepEpartsEnum;
 use yii\helpers\Json;
 
 class ProductTypes extends EPartsBaseStep
 {
-
-    public int $brandId;
-    public int $epBrandId;
+    private ?EpBrand $brand;
 
     /**
      * @param $config
@@ -24,17 +25,29 @@ class ProductTypes extends EPartsBaseStep
      */
     public function run(): void
     {
-        parent::run();
+        if (!empty($this->brand)) {
 
-        if ($this->isSuccess()) {
-            $productTypes = $this->getResponseParam('productTypes');
-        }
-        $batchParams = [];
-        foreach ($productTypes as $item) {
+            $this->brand->status_parser = STATUS_PARSER_ACTIVE;
+            $this->brand->save();
 
-            $batchParams[] = [$this->brandId, $item['productTypeId'], $item['productTypeDescription']];
+            parent::run();
+
+            if ($this->isSuccess()) {
+                $productTypes = $this->getResponseParam('productTypes');
+                $batchParams = [];
+                foreach ($productTypes as $item) {
+                    $batchParams[] = [$this->brand->id, $item['productTypeId'], $item['productTypeDescription']];
+                }
+                \Yii::$app->db->createCommand()->batchInsert('{{%ep_product_type}}', ['brand_id', 'ep_id', 'description'], $batchParams)->execute();
+                $this->brand->status_parser = STATUS_PARSER_COMPLETE;
+            } else {
+                $this->brand->status_parser = STATUS_PARSER_ERROR;
+            }
+
+            $this->brand->save();
+        } else {
+            ParserStep::complete($this->parserName, $this->action, StepEpartsEnum::PRODUCT_TYPES_STEP);
         }
-        \Yii::$app->db->createCommand()->batchInsert('{{%ep_product_type}}', ['brand_id', 'ep_id', 'description'], $batchParams)->execute();
 
     }
 
@@ -44,7 +57,15 @@ class ProductTypes extends EPartsBaseStep
     public function makeDataRequest(): array
     {
         return [
-            'brandId' => $this->epBrandId
+            'brandId' => $this->brand->ep_id
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->brand = EpBrand::findOne(['status_parser' => STATUS_PARSER_NEW]);
     }
 }

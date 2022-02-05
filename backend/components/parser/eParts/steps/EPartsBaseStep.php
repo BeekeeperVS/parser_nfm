@@ -2,15 +2,21 @@
 
 namespace components\parser\eParts\steps;
 
+use components\parser\enum\ParserEnum;
 use JetBrains\PhpStorm\Pure;
 use yii\base\BaseObject;
 use yii\helpers\Json;
 
 abstract class EPartsBaseStep extends BaseObject implements EPartsStepInterface
 {
+
+    protected string $parserName  = ParserEnum::EPARTS_PARSER;
+
     private string $apiMethod;
 
     private array $response;
+
+    public string $action;
 
     /**
      * {@inheritDoc}

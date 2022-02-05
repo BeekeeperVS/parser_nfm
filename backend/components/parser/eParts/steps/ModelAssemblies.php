@@ -2,18 +2,16 @@
 
 namespace components\parser\eParts\steps;
 
+use app\models\common\service\ParserStep;
 use app\models\eparts\EpAssembly;
+use app\models\eparts\service\EpModelFunctionalGroup;
+use components\parser\eParts\enum\StepEpartsEnum;
 
 class ModelAssemblies extends EPartsBaseStep
 {
+    private string $stepTitle = StepEpartsEnum::MODEL_ASSEMBLIES_STEP;
+    protected ?EpModelFunctionalGroup $modelFunctionalGroup;
 
-    public int $brandId;
-    public int $modelId;
-
-    public int $epBrandId;
-    public string $epModelId;
-    public string $epFunctionalGroupId;
-    public bool $epIsTechnicalTypeDriven;
     private string $epImageType = 'large';
     private bool $epFilterForSN = false;
 
@@ -31,24 +29,36 @@ class ModelAssemblies extends EPartsBaseStep
      */
     public function run(): void
     {
-        parent::run();
+        if (!empty($this->modelFunctionalGroup)) {
 
-        if ($this->isSuccess()) {
-            $assemblies= $this->getResponseParam('assemblies');
-        }
+            $this->modelFunctionalGroup->status_parser = STATUS_PARSER_ACTIVE;
+            $this->modelFunctionalGroup->save();
 
-        foreach ($assemblies as $item) {
-            $assembly = new EpAssembly();
-            $assembly->model_functional_group_id = 1;
-            $assembly->ep_id = $item['assemblyId'];
-            $assembly->code = $item['assemblyCode'];
-            $assembly->name = $item['assemblyName'];
-            $assembly->has_note = $item['hasNote'] ?? false;
-            $assembly->image = $item['image'];
-            if(!$assembly->save()){
-                var_dump($assembly->errors);
+            parent::run();
+
+            if ($this->isSuccess()) {
+                $assemblies = $this->getResponseParam('assemblies');
+                foreach ($assemblies as $item) {
+                    $assembly = new EpAssembly();
+                    $assembly->model_functional_group_id = $this->modelFunctionalGroup->functional_group_id;
+                    $assembly->ep_id = $item['assemblyId'];
+                    $assembly->code = $item['assemblyCode'];
+                    $assembly->name = $item['assemblyName'];
+                    $assembly->has_note = $item['hasNote'] ?? false;
+                    $assembly->image = $item['image'];
+                    $assembly->save();
+                }
+
+                $this->modelFunctionalGroup->status_parser = STATUS_PARSER_COMPLETE;
+
+            } else {
+                $this->modelFunctionalGroup->status_parser = STATUS_PARSER_ERROR;
             }
+
+        } else {
+            ParserStep::complete($this->parserName, $this->action, $this->stepTitle);
         }
+
     }
 
 
@@ -58,14 +68,20 @@ class ModelAssemblies extends EPartsBaseStep
     public function makeDataRequest(): array
     {
         return [
-            'brandId' => $this->epBrandId,
-            'modelId' => $this->epModelId,
-
-            'functionalGroupId' => $this->epFunctionalGroupId,
-            'isTechnicalTypeDriven' => $this->epIsTechnicalTypeDriven,
+            'functionalGroupId' => $this->modelFunctionalGroup->functionalGroup->ep_id,//epFunctionalGroupId,
+            'brandId' => $this->modelFunctionalGroup->productModel->type->brand->ep_id,//epBrandId,
+            'modelId' => $this->modelFunctionalGroup->productModel->ep_id,//epModelId,
+            'isTechnicalTypeDriven' => $this->modelFunctionalGroup->productModel->is_technical_type_driven,//pIsTechnicalTypeDriven,
             'imageType' => $this->epImageType,
             'filterForSN' => $this->epFilterForSN
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->modelFunctionalGroup = EpModelFunctionalGroup::findOne(['status_parser' => STATUS_PARSER_NEW]);
+    }
 }

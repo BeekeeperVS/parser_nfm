@@ -2,17 +2,14 @@
 
 namespace components\parser\eParts\steps;
 
+use app\models\common\service\ParserStep;
+use app\models\eparts\service\EpProductLine;
+use components\parser\eParts\enum\StepEpartsEnum;
 use JetBrains\PhpStorm\ArrayShape;
 
 class ProductSeries extends EPartsBaseStep
 {
-    public int $brandId;
-    public int $typeId;
-    public int $lineId;
-
-    public int $epBrandId;
-    public string $epTypeId;
-    public string $epLineId;
+    protected ?EpProductLine $line;
 
     /**
      * @param $config
@@ -28,16 +25,30 @@ class ProductSeries extends EPartsBaseStep
      */
     public function run(): void
     {
-        parent::run();
+        if (!empty($this->line)) {
 
-        if($this->isSuccess()) {
-            $productSeries = $this->getResponseParam('productSeries');
+            $this->line->status_parser = STATUS_PARSER_ACTIVE;
+            $this->line->save();
+
+            parent::run();
+
+            if ($this->isSuccess()) {
+                $productSeries = $this->getResponseParam('productSeries');
+                $batch_params = [];
+                foreach ($productSeries as $item) {
+                    $batch_params[] = [$this->line->type->id, $this->line->id, $item['seriesId'], $item['seriesDescription']];
+                }
+                \Yii::$app->db->createCommand()->batchInsert('{{%ep_product_series}}', ['type_id', 'line_id', 'ep_id', 'description'], $batch_params)->execute();
+
+                $this->line->status_parser = STATUS_PARSER_COMPLETE;
+            } else {
+                $this->line->status_parser = STATUS_PARSER_ERROR;
+            }
+            $this->line->save();
+
+        } else {
+            ParserStep::complete($this->parserName, $this->action, StepEpartsEnum::PRODUCT_TYPES_STEP);
         }
-        $batch_params = [];
-        foreach ($productSeries as $item) {
-            $batch_params[] = [$this->typeId, $this->lineId, $item['seriesId'], $item['seriesDescription']];
-        }
-        \Yii::$app->db->createCommand()->batchInsert('{{%ep_product_series}}', ['type_id','line_id','ep_id', 'description'], $batch_params)->execute();
     }
 
     /**
@@ -46,9 +57,17 @@ class ProductSeries extends EPartsBaseStep
     public function makeDataRequest(): array
     {
         return [
-            'brandId' => $this->epBrandId,
-            'productTypeId' => $this->epTypeId,
-            'productLineId' => $this->epLineId
+            'brandId' => $this->line->type->brand->ep_id,
+            'productTypeId' => $this->line->type->ep_id,
+            'productLineId' => $this->line->ep_id,
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->line = EpProductLine::findOne(['status_parser' => STATUS_PARSER_NEW]);
     }
 }

@@ -17,9 +17,9 @@ final class StepEpartsEnum extends EPartsBaseEnum
     public const MODEL_ASSEMBLIES_STEP = 'model-assemblies';
     public const ASSEMBLY_DETAILS_STEP = 'assembly-details';
     public const ASSEMBLY_PARTS_STEP = 'assembly-parts';
-    public const PARTS_DETAILS_STEP = 'parts-details';
-    public const PARTS_SUBSTITUTIONS_STEP = 'parts-substitutions';
-    public const PARTS_KITS_STEP = 'parts-kits';
+    public const PART_DETAILS_STEP = 'part-details';
+    public const PART_SUBSTITUTIONS_STEP = 'part-substitutions';
+    public const PART_KITS_STEP = 'part-kits';
     /**
      * @inheritDoc
      */

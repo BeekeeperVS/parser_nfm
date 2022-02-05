@@ -30,14 +30,18 @@ import {PartKits} from "./steps-parser/PartKits";
 @Controller('eparts-parser')
 export class EpartsParserController {
 
-    constructor(private readonly epartsParserService: EpartsParserService) {}
+    constructor(private readonly epartsParserService: EpartsParserService) {
+    }
 
     @Post('brands')
     async brands(@Body() brandDto: BrandDto, @Res() res: Response) {
+        try {
             let stepModel = new Brands(parserConfig());
             let brands = await stepModel.get(brandDto);
             res.send({status: true, brands: brands});
-
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
         return true;
     }
 
@@ -101,9 +105,13 @@ export class EpartsParserController {
 
     @Post('assembly-parts')
     async assemblyParts(@Body() assemblyPartsDto: AssemblyPartsDto, @Res() res: Response) {
-        let stepModel = new AssemblyParts(parserConfig());
-        let assemblyParts = await stepModel.get(assemblyPartsDto);
-        res.send({status: true, assemblyParts: assemblyParts.parts});
+        try {
+            let stepModel = new AssemblyParts(parserConfig());
+            let assemblyParts = await stepModel.get(assemblyPartsDto);
+            res.send({status: true, assemblyParts: assemblyParts.parts});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
         return true;
     }
 
