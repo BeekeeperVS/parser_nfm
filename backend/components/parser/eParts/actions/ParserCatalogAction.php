@@ -3,9 +3,6 @@
 namespace components\parser\eParts\actions;
 
 use app\models\common\service\ParserStep;
-use app\models\eparts\EpAssembly;
-use app\models\eparts\EpModelFunctionalGroup;
-use components\parser\enum\ParserEnum;
 use components\parser\eParts\enum\StepEpartsEnum;
 use components\parser\eParts\steps\factory\EPartsStepParserFactory;
 
@@ -22,13 +19,13 @@ final class ParserCatalogAction extends EPartsBaseAction
     {
         $stepFactory = new EPartsStepParserFactory();
         $parserStep = ParserStep::find()->currentStep();
-
+        $isParent = !empty($parserStep->childSteps);
         if (!empty($parserStep)) {
-            $stepParser = $stepFactory->makeStep(self::ACTION_TITLE, $parserStep->title);
+            $stepParser = $stepFactory->makeStep(self::ACTION_TITLE, $parserStep->title, ['isParen' => $isParent]);
             $stepParser->run();
-            if (!empty($parserStep->childSteps)) {
+            if ($isParent) {
                 foreach ($parserStep->childSteps as $childStep) {
-                    $childStepParser = $stepFactory->makeStep(self::ACTION_TITLE, $childStep->title);
+                    $childStepParser = $stepFactory->makeStep(self::ACTION_TITLE, $childStep->title, ['isChild' => true, 'parentStep' => $childStep->parent_step]);
                     $childStepParser->run();
                 }
             }

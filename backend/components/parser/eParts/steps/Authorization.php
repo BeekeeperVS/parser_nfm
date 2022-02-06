@@ -2,6 +2,9 @@
 
 namespace components\parser\eParts\steps;
 
+use app\models\common\service\ParserStep;
+use components\parser\eParts\enum\StepEpartsEnum;
+
 class Authorization extends EPartsBaseStep
 {
     /**
@@ -9,6 +12,6 @@ class Authorization extends EPartsBaseStep
      */
     public function run(): void
     {
-        print_r(self::class);
+        ParserStep::complete($this->parserName, $this->action, StepEpartsEnum::LOGIN_STEP);
     }
 }

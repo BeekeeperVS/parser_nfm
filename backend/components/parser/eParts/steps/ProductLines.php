@@ -8,6 +8,8 @@ use components\parser\eParts\enum\StepEpartsEnum;
 
 class ProductLines extends EPartsBaseStep
 {
+    private string $stepTitle = StepEpartsEnum::PRODUCT_LINES_STEP;
+
     public const API_METHOD = '/product-lines';
 
     public ?EpProductType $type;
@@ -20,6 +22,7 @@ class ProductLines extends EPartsBaseStep
         parent::__construct($config);
         $this->setApiMethod('product-lines');
     }
+
     /**
      * @inheritDoc
      */
@@ -30,7 +33,7 @@ class ProductLines extends EPartsBaseStep
             $this->type->status_parser = STATUS_PARSER_ACTIVE;
             $this->type->save();
 
-            parent::run();
+                parent::run();
 
             if ($this->isSuccess()) {
                 $productLines = $this->getResponseParam('productLines');
@@ -47,7 +50,7 @@ class ProductLines extends EPartsBaseStep
             }
             $this->type->save();
         } else {
-            ParserStep::complete($this->parserName, $this->action, StepEpartsEnum::PRODUCT_TYPES_STEP);
+            ParserStep::complete($this->parserName, $this->action, $this->stepTitle);
         }
     }
 

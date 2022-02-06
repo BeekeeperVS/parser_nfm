@@ -33,9 +33,14 @@ class ModelFunctionlGroups extends EPartsBaseStep
             $this->model->save();
             try {
 
-                parent::run();
+                try {
+                    parent::run();
+                    $isErrorParser = false;
+                } catch (\Throwable $e) {
+                    $isErrorParser = true;
+                }
 
-                if ($this->isSuccess()) {
+                if (!$isErrorParser && $this->isSuccess()) {
 
                     $functionalGroups = $this->getResponseParam('functionalGroups');
 

@@ -34,9 +34,14 @@ class ModelAssemblies extends EPartsBaseStep
             $this->modelFunctionalGroup->status_parser = STATUS_PARSER_ACTIVE;
             $this->modelFunctionalGroup->save();
 
-            parent::run();
+            try {
+                parent::run();
+                $isErrorParser = false;
+            } catch (\Throwable $e) {
+                $isErrorParser = true;
+            }
 
-            if ($this->isSuccess()) {
+            if (!$isErrorParser && $this->isSuccess()) {
                 $assemblies = $this->getResponseParam('assemblies');
                 foreach ($assemblies as $item) {
                     $assembly = new EpAssembly();
@@ -54,7 +59,7 @@ class ModelAssemblies extends EPartsBaseStep
             } else {
                 $this->modelFunctionalGroup->status_parser = STATUS_PARSER_ERROR;
             }
-
+            $this->modelFunctionalGroup->save();
         } else {
             ParserStep::complete($this->parserName, $this->action, $this->stepTitle);
         }

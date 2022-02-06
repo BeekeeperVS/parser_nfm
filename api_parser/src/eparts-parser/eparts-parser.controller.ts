@@ -123,11 +123,11 @@ export class EpartsParserController {
         return true;
     }
 
-    @Post('part-substitution')
-    async partSubstitution(@Body() partSubstitutionDto: PartSubstitutionsDto, @Res() res: Response) {
+    @Post('part-substitutions')
+    async partSubstitutions(@Body() partSubstitutionDto: PartSubstitutionsDto, @Res() res: Response) {
         let stepModel = new PartsSubstitutions(parserConfig());
-        let partSubstitution = await stepModel.get(partSubstitutionDto);
-        res.send({status: true, partSubstitution: partSubstitution});
+        let partSubstitutions = await stepModel.get(partSubstitutionDto);
+        res.send({status: true, partSubstitutions: partSubstitutions});
         return true;
     }
 

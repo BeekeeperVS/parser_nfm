@@ -29,10 +29,13 @@ class ProductSeries extends EPartsBaseStep
 
             $this->line->status_parser = STATUS_PARSER_ACTIVE;
             $this->line->save();
-
-            parent::run();
-
-            if ($this->isSuccess()) {
+            try {
+                parent::run();
+                $isErrorParser = false;
+            } catch (\Throwable $e) {
+                $isErrorParser = true;
+            }
+            if (!$isErrorParser && $this->isSuccess()) {
                 $productSeries = $this->getResponseParam('productSeries');
                 $batch_params = [];
                 foreach ($productSeries as $item) {
@@ -47,7 +50,7 @@ class ProductSeries extends EPartsBaseStep
             $this->line->save();
 
         } else {
-            ParserStep::complete($this->parserName, $this->action, StepEpartsEnum::PRODUCT_TYPES_STEP);
+            ParserStep::complete($this->parserName, $this->action, StepEpartsEnum::PRODUCT_SERIES_STEP);
         }
     }
 

@@ -2,19 +2,20 @@
 
 namespace components\parser\eParts\steps;
 
-use app\models\eparts\EpAssembly;
+use app\models\common\service\ParserStep;
+use app\models\eparts\service\EpAssembly;
+use components\parser\eParts\enum\StepEpartsEnum;
 
 class AssemblyDetails extends EPartsBaseStep
 {
+    private string $stepTitle = StepEpartsEnum::ASSEMBLY_DETAILS_STEP;
+
+    protected ?EpAssembly $assembly;
 
     public int $brandId;
     public int $modelId;
     public int $assemblyId;
 
-    public int $epBrandId;
-    public string $epModelId;
-    public string $epAssemblyId;
-    public bool $epIsTechnicalTypeDriven;
     private ?string $epSerialNumberId = null;
     private string $epImageType = 'large';
     private bool $epFilterForSN = false;
@@ -33,17 +34,32 @@ class AssemblyDetails extends EPartsBaseStep
      */
     public function run(): void
     {
-        parent::run();
+        if (!empty($this->assembly)) {
+            $this->assembly->status_parser = STATUS_PARSER_ACTIVE;
+            $this->assembly->save();
 
-        if ($this->isSuccess()) {
-            $assemblyDetails = $this->getResponseParam('assemblyDetails');
-            $assemblyModel = EpAssembly::findOne($this->assemblyId);
-            if (isset($assemblyModel) && isset($assemblyDetails['hotspots'])) {
-                $assemblyModel->details = ['hotspots' => $assemblyDetails['hotspots']];
-                if (!$assemblyModel->save()) {
-                    print_r($assemblyModel->errors);
-                }
+            try {
+                parent::run();
+                $isErrorParser = false;
+            } catch (\Throwable $e) {
+                $isErrorParser = true;
             }
+
+            if (!$isErrorParser && $this->isSuccess()) {
+                $assemblyDetails = $this->getResponseParam('assemblyDetails');
+                if (isset($assemblyDetails['hotspots'])) {
+                    $this->assembly->details = ['hotspots' => $assemblyDetails['hotspots']];
+                    if (!$this->assembly->save()) {
+                        // add logger;
+                    }
+                }
+
+                $this->assembly->status_parser = STATUS_PARSER_COMPLETE;
+            } else {
+                $this->assembly->status_parser = STATUS_PARSER_ERROR;
+            }
+        } else {
+            ParserStep::complete($this->parserName, $this->action, $this->stepTitle);
         }
     }
 
@@ -53,13 +69,26 @@ class AssemblyDetails extends EPartsBaseStep
     public function makeDataRequest(): array
     {
         return [
-            'brandId' => $this->epBrandId,
-            'assemblyId' => $this->epAssemblyId,
-            'modelId' => $this->epModelId,
-            'serialNumberId' => $this->epSerialNumberId,
+            'brandId' => $this->assembly->modelFunctionalGroup->productModel->type->brand->ep_id,//epBrandId,
+            'assemblyId' => $this->assembly->ep_id,//epAssemblyId,
+            'modelId' => $this->assembly->modelFunctionalGroup->productModel->ep_id,//epModelId,
+            'serialNumberId' => $this->assembly->modelFunctionalGroup->productModel->series->ep_id,//epSerialNumberId,
+            'isTechnicalTypeDriven' => $this->assembly->modelFunctionalGroup->productModel->is_technical_type_driven,//epIsTechnicalTypeDriven,
             'imageType' => $this->epImageType,
-            'isTechnicalTypeDriven' => $this->epIsTechnicalTypeDriven,
             'filterForSN' => $this->epFilterForSN
         ];
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->assembly = $this->isChild ? $this->getParentInstance() : \app\models\eparts\service\EpAssembly::findOne(['status_parser' => STATUS_PARSER_NEW]);
+
+        if ($this->isParen) {
+            $this->setParentInstance($this->stepTitle, $this->assembly);
+        }
     }
 }

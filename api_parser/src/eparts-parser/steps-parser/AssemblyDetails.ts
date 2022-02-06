@@ -35,7 +35,7 @@ export class AssemblyDetails {
     constructor(private readonly parserConfig: ParserHeaderConfigInterface) {
     }
     async get(dto: AssemblyDetailsDto): Promise<AssemblyDetailsInterface> {
-
+        console.log(dto);
         let url = this.parserConfig.apiUrl + AssemblyDetails.apiMethod;
 
         const urlRequest = new URL(url);
@@ -44,7 +44,7 @@ export class AssemblyDetails {
         urlRequest.searchParams.append("imageType", String(dto.imageType));
         urlRequest.searchParams.append("isTechnicalTypeDriven", String(dto.isTechnicalTypeDriven));
         urlRequest.searchParams.append("serialNumberId", String(dto.serialNumberId));
-
+        urlRequest.searchParams.append("filterForSN", String(dto.filterForSN));
 
         let axios = new Axios({
             headers: {
@@ -52,6 +52,7 @@ export class AssemblyDetails {
                 language: this.parserConfig.header.language,
                 regionId: this.parserConfig.header.regionId,
                 brandId: dto.brandId,
+                regionGroupId: '2,3,5,7,10,11,13,14,17,18,21,22,25,26,29,30'
             }
         });
 

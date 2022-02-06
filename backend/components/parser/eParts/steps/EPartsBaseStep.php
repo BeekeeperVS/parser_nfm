@@ -9,14 +9,14 @@ use yii\helpers\Json;
 
 abstract class EPartsBaseStep extends BaseObject implements EPartsStepInterface
 {
+    use ParentInstanseTait;
+
+    public string $action;
 
     protected string $parserName  = ParserEnum::EPARTS_PARSER;
 
     private string $apiMethod;
-
     private array $response;
-
-    public string $action;
 
     /**
      * {@inheritDoc}
