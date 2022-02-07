@@ -1,3 +1,7 @@
+define mysql_ip
+	$$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nfm_mysql_db)
+endef
+
 up:
 	docker stop $$(docker ps -aq)
 	sudo chmod 777 -R database
@@ -22,3 +26,6 @@ init-db:
 
 ip-server:
 	sudo ifconfig | grep "inet "
+
+mysql_ip:
+	echo $(mysql_ip)
