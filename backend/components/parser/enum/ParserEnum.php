@@ -5,7 +5,7 @@ namespace components\parser\enum;
 abstract class ParserEnum implements EnumInterface
 {
     public const EPARTS_PARSER = 'e_parts';
-    public const AGCOCORP_PARSER = 'agcocorp';
+    public const AGCONET_PARSER = 'agconet';
 
     /**
      * {@inheritDoc}
@@ -14,7 +14,7 @@ abstract class ParserEnum implements EnumInterface
     {
         return [
             self::EPARTS_PARSER => self::EPARTS_PARSER,
-            self::AGCOCORP_PARSER => self::AGCOCORP_PARSER
+            self::AGCONET_PARSER => self::AGCONET_PARSER
         ];
     }
 

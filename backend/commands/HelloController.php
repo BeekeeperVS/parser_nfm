@@ -7,6 +7,7 @@
 
 namespace app\commands;
 
+use app\service\fileGenerate\PhpConfigFileGenerateService;
 use yii\console\Controller;
 use yii\console\ExitCode;
 
@@ -27,8 +28,17 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
-        echo $message . "\n";
-
-        return ExitCode::OK;
+        $phpGenerate = new PhpConfigFileGenerateService();
+        $phpGenerate->put('cookies', [
+            'test22' => 'value test 2',
+            'test1' => ['item1'=> 150, 'item2' => 'url', 'test1' => ['item1'=> 150, 'item2' => 'url']],
+            'test2' => 'value test 2',
+        ]);
+        $phpGenerate->put('cookies2', [
+            'test22' => 'value test 2',
+            'test1' => ['item1'=> 150, 'item2' => 'url', 'test1' => ['item1'=> 150, 'item2' => 'url']],
+            'test2' => 'value test 2',
+        ]);
+        $phpGenerate->install('parserConfig.php', \Yii::getAlias("@config"));
     }
 }

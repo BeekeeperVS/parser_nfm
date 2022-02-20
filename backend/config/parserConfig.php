@@ -1,0 +1,50 @@
+<?php
+
+ return [
+	'cookies' => [
+		'0' => [
+			'name' => 'sUserid',
+			'value' => 'xd3945sp',
+			'domain' => 'net.agcocorp.com',
+			'path' => '/',
+			'expires' => '-1',
+			'size' => '15',
+			'httpOnly' => '',
+			'secure' => '',
+			'session' => '1',
+		],
+		'1' => [
+			'name' => 'mySession',
+			'value' => 'b317fd43%2Dd56b%2D4623%2D9b8f%2D7e2befd3a866',
+			'domain' => 'net.agcocorp.com',
+			'path' => '/agconet',
+			'expires' => '-1',
+			'size' => '53',
+			'httpOnly' => '',
+			'secure' => '',
+			'session' => '1',
+		],
+		'2' => [
+			'name' => 'SVRID',
+			'value' => 'C',
+			'domain' => 'net.agcocorp.com',
+			'path' => '/agconet',
+			'expires' => '-1',
+			'size' => '6',
+			'httpOnly' => '',
+			'secure' => '',
+			'session' => '1',
+		],
+		'3' => [
+			'name' => 'SSO',
+			'value' => '',
+			'domain' => 'net.agcocorp.com',
+			'path' => '/agconet',
+			'expires' => '-1',
+			'size' => '3',
+			'httpOnly' => '',
+			'secure' => '',
+			'session' => '1',
+		],
+	],
+];
