@@ -1,9 +1,19 @@
 import {Body, Controller, Post, Res} from '@nestjs/common';
 import {Response} from "express";
 import {AgconetParserService} from "./agconet-parser.service";
-import {ConfigService} from "@nestjs/config";
-
-const puppeteer = require("puppeteer-extra");
+import {parserConfig} from "./config/ParserConfig";
+import {Login} from "./steps-parser/Login";
+import {LoginDto} from "./dto/LoginDto";
+import {Brands} from "./steps-parser/Brands";
+import {BrandsDto} from "./dto/BrandsDto";
+import {BrandItemDto} from "./dto/BrandItemDto";
+import {BrandItem} from "./steps-parser/BrandItem";
+import {CategoryDto} from "./dto/CategoryDto";
+import {CatalogPats} from "./steps-parser/CatalogPats";
+import {ModelGroups} from "./steps-parser/ModelGroups";
+import {Models} from "./steps-parser/Models";
+import {ModelSchemes} from "./steps-parser/ModelSchems";
+import {ModelSchemesDto} from "./dto/ModelSchemesDto";
 
 @Controller('agconet-parser')
 export class AgconetParserController {
@@ -12,58 +22,87 @@ export class AgconetParserController {
     }
 
     @Post('login')
-    async login(@Body() dto, @Res() res: Response) {
+    async login(@Body() dto: LoginDto, @Res() res: Response) {
         try {
-            let cookies = [];
-
-            let launchArgs = [
-                '--disable-gpu',
-                '--disable-dev-shm-usage',
-                '--no-sandbox',
-                '--disable-setuid-sandbox'
-            ];
-
-            let browser = await puppeteer.launch({
-                headless: true,
-                slowMo: 10,
-                ignoreHTTPSErrors: true,
-                devtools: false,
-                args: launchArgs
-            });
-
-            let context = await browser.createIncognitoBrowserContext();
-            let page = await context.newPage();
-
-            await page.goto(process.env.AGCONET_LOGIN_URL);
-            await page.evaluate(async (login, password) => {
-                let loginElement = document.querySelector('#login input[name="iusername"]');
-                let passwordElement = document.querySelector('#login input[name="ipassword"]');
-                // @ts-ignore
-                loginElement.value = login;
-                loginElement.dispatchEvent(new Event("change"));
-                // @ts-ignore
-                passwordElement.value = password;
-                passwordElement.dispatchEvent(new Event("change"));
-
-            }, process.env.AGCONET_LOGIN, process.env.AGCONET_PASSWORD);
-            await sleep(5000);
-            await page.waitForTimeout(2000);
-            await page.click("button#button1");
-            await sleep(5000);
-            cookies = await page.cookies();
-            await page.close();
-            await context.close();
-            await browser.close();
-
-            res.send({status: true, data: {cookies: cookies}});
+            let stepModel = new Login(parserConfig());
+            let responseData = await stepModel.get(dto)
+            res.send({status: true, data: responseData});
         } catch (exception) {
             res.send({status: false, error: exception.message});
         }
         return true;
     }
 
-}
+    @Post('brands')
+    async brands(@Body() dto: BrandsDto, @Res() res: Response) {
+        try {
+            let stepModel = new Brands(parserConfig());
+            let responseData = await stepModel.get(dto)
+            res.send({status: true, data: responseData});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
+        return true;
+    }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    @Post('brand-item')
+    async brandItem(@Body() dto: BrandItemDto, @Res() res: Response) {
+        try {
+            let stepModel = new BrandItem(parserConfig());
+            let responseData = await stepModel.get(dto)
+            res.send({status: true, data: responseData});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
+        return true;
+    }
+
+    @Post('catalog-pats')
+    async catalogPats(@Body() dto: CategoryDto, @Res() res: Response) {
+        try {
+            let stepModel = new CatalogPats(parserConfig());
+            let responseData = await stepModel.get(dto)
+            res.send({status: true, data: responseData});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
+        return true;
+    }
+
+
+    @Post('model-groups')
+    async modelGroups(@Body() dto: CategoryDto, @Res() res: Response) {
+        try {
+            let stepModel = new ModelGroups(parserConfig());
+            let responseData = await stepModel.get(dto)
+            res.send({status: true, data: responseData});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
+        return true;
+    }
+
+    @Post('models')
+    async models(@Body() dto: CategoryDto, @Res() res: Response) {
+        try {
+            let stepModel = new Models(parserConfig());
+            let responseData = await stepModel.get(dto)
+            res.send({status: true, data: responseData});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
+        return true;
+    }
+
+    @Post('model-schemes')
+    async modelSchemes(@Body() dto: ModelSchemesDto, @Res() res: Response) {
+        try {
+            let stepModel = new ModelSchemes(parserConfig());
+            let responseData = await stepModel.get(dto);
+            res.send({status: true, data: responseData});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
+        return true;
+    }
 }

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__."\helper\url.php";
+
 /**
  * @param $key
  * @param $default

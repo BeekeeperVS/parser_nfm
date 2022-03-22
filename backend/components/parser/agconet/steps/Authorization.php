@@ -28,7 +28,9 @@ class Authorization extends AgconetBaseStep
 
         if ($this->isSuccess()) {
             $cookies = $this->getResponseParam('cookies');
+            $bearerToken = $this->getResponseParam('bearerToken');
             $phpGenerate = new PhpConfigFileGenerateService();
+            $phpGenerate->put('bearerToken', $bearerToken);
             $phpGenerate->put('cookies', $cookies);
             $phpGenerate->install('parserConfig.php', \Yii::getAlias("@config"));
         }

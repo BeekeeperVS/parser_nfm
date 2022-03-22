@@ -11,6 +11,9 @@ up-dev:
 up-local:
 	docker-compose -f docker-compose.local.yml up --build
 
+stop:
+	docker-compose stop
+
 build:
 	sudo chmod 777 -R database
 	sudo rm -rf database/*

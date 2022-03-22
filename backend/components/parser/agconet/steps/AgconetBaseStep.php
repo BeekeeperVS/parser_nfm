@@ -112,9 +112,9 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
 
     /**
      * @param string $param
-     * @return array|null
+     * @return array|string|null
      */
-    protected function getResponseParam(string $param): ?array
+    protected function getResponseParam(string $param): array|string|null
     {
         return $this->response['data'][$param] ?? null;
     }
