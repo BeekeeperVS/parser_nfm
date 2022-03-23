@@ -14,6 +14,10 @@ import {ModelGroups} from "./steps-parser/ModelGroups";
 import {Models} from "./steps-parser/Models";
 import {ModelSchemes} from "./steps-parser/ModelSchems";
 import {ModelSchemesDto} from "./dto/ModelSchemesDto";
+import {Schemes} from "./steps-parser/Schemes";
+import {SchemesDto} from "./dto/SchemesDto";
+import {SchemeDetailDto} from "./dto/SchemeDetailDto";
+import {SchemeDetail} from "./steps-parser/SchemeDetail";
 
 @Controller('agconet-parser')
 export class AgconetParserController {
@@ -98,6 +102,30 @@ export class AgconetParserController {
     async modelSchemes(@Body() dto: ModelSchemesDto, @Res() res: Response) {
         try {
             let stepModel = new ModelSchemes(parserConfig());
+            let responseData = await stepModel.get(dto);
+            res.send({status: true, data: responseData});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
+        return true;
+    }
+
+    @Post('schemes')
+    async schemes(@Body() dto: SchemesDto, @Res() res: Response) {
+        try {
+            let stepModel = new Schemes(parserConfig());
+            let responseData = await stepModel.get(dto);
+            res.send({status: true, data: responseData});
+        } catch (exception) {
+            res.send({status: false, error: exception.message});
+        }
+        return true;
+    }
+
+    @Post('scheme-detail')
+    async schemeDetail(@Body() dto: SchemeDetailDto, @Res() res: Response) {
+        try {
+            let stepModel = new SchemeDetail(parserConfig());
             let responseData = await stepModel.get(dto);
             res.send({status: true, data: responseData});
         } catch (exception) {
