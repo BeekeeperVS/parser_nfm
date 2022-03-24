@@ -7,6 +7,13 @@ use app\models\eparts\service\EpBrand;
 use app\models\eparts\service\EpProductType;
 use components\parser\agconet\enum\StepAgconetEnum;
 use components\parser\agconet\steps\AgconetStepInterface;
+use components\parser\agconet\steps\BrandItem;
+use components\parser\agconet\steps\CatalogPats;
+use components\parser\agconet\steps\ModelGroups;
+use components\parser\agconet\steps\Models;
+use components\parser\agconet\steps\ModelSchemes;
+use components\parser\agconet\steps\SchemeDetail;
+use components\parser\agconet\steps\Schemes;
 use components\parser\enum\ParserEnum;
 use components\parser\agconet\steps\AssemblyDetails;
 use components\parser\agconet\steps\AssemblyParts;
@@ -50,13 +57,14 @@ class AgconetStepParserFactory implements AgconetStepParserFactoryInterface
     {
         return [
             StepAgconetEnum::LOGIN_STEP => Authorization::class,
-//            StepAgconetEnum::BRANDS_STEP => Brands::class,
-//            StepAgconetEnum::PRODUCT_TYPES_STEP => ProductTypes::class,
-//            StepAgconetEnum::PRODUCT_LINES_STEP => ProductLines::class,
-//            StepAgconetEnum::PRODUCT_SERIES_STEP => ProductSeries::class,
-//            StepAgconetEnum::PRODUCT_MODELS_STEP => ProductModels::class,
-//            StepAgconetEnum::MODEL_FUNCTIONAL_GROUPS_STEP => ModelFunctionlGroups::class,
-//            StepAgconetEnum::MODEL_ASSEMBLIES_STEP => ModelAssemblies::class,
+            StepAgconetEnum::BRANDS_STEP => Brands::class,
+            StepAgconetEnum::BRAND_ITEM_STEP => BrandItem::class,
+            StepAgconetEnum::CATALOG_PATS_STEP => CatalogPats::class,
+            StepAgconetEnum::MODEL_GROUPS_STEP => ModelGroups::class,
+            StepAgconetEnum::MODELS_STEP => Models::class,
+            StepAgconetEnum::MODEL_SCHEMES_STEP => ModelSchemes::class,
+            StepAgconetEnum::SCHEMES_STEP => Schemes::class,
+            StepAgconetEnum::SCHEME_DETAIL_STEP => SchemeDetail::class,
 //            StepAgconetEnum::ASSEMBLY_DETAILS_STEP => AssemblyDetails::class,
 //            StepAgconetEnum::ASSEMBLY_PARTS_STEP => AssemblyParts::class,
 //            StepAgconetEnum::PART_DETAILS_STEP => PartDetails::class,

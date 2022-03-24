@@ -19,7 +19,7 @@ export class BrandItem implements BrandsInterface {
         let axios = new Axios({
             headers: {
                 Authorization: "Bearer " + dto.bearerToken,
-                // 'Accept-Language': this.parserConfig.header.language
+                'Accept-Language': this.parserConfig.header.language
             }
         });
         let response = await axios.get(url);

@@ -6,17 +6,14 @@ final class StepAgconetEnum extends AgconetBaseEnum
 {
     public const LOGIN_STEP = 'login';
     public const BRANDS_STEP = 'brands';
-    public const PRODUCT_TYPES_STEP = 'product-types';
-    public const PRODUCT_LINES_STEP = 'product-lines';
-    public const PRODUCT_SERIES_STEP = 'product-series';
-    public const PRODUCT_MODELS_STEP = 'product-models';
-    public const MODEL_FUNCTIONAL_GROUPS_STEP = 'model-functional-groups';
-    public const MODEL_ASSEMBLIES_STEP = 'model-assemblies';
-    public const ASSEMBLY_DETAILS_STEP = 'assembly-details';
-    public const ASSEMBLY_PARTS_STEP = 'assembly-parts';
-    public const PART_DETAILS_STEP = 'part-details';
-    public const PART_SUBSTITUTIONS_STEP = 'part-substitutions';
-    public const PART_KITS_STEP = 'part-kits';
+    public const BRAND_ITEM_STEP = 'brand-item';
+    public const CATALOG_PATS_STEP = 'catalog-pats';
+    public const MODEL_GROUPS_STEP = 'model-groups';
+    public const MODELS_STEP = 'models';
+    public const MODEL_SCHEMES_STEP = 'model-schemes';
+    public const SCHEMES_STEP = 'schemes';
+    public const SCHEME_DETAIL_STEP = 'scheme-detail';
+
     /**
      * @inheritDoc
      */

@@ -33,7 +33,8 @@ build-local:
 
 init-db:
 	docker exec -it nfm_mysql_db bash -c "mysql --user=root -e \"DROP DATABASE IF EXISTS nfm_catalog; CREATE DATABASE nfm_catalog CHARACTER SET utf8 COLLATE utf8_unicode_ci;\""
-	docker exec -it nfm_mysql_db bash -c "mysql --user=root -e \"DROP DATABASE IF EXISTS nfm_parser; CREATE DATABASE nfm_parser CHARACTER SET utf8 COLLATE utf8_unicode_ci;\""
+	docker exec -it nfm_mysql_db bash -c "mysql --user=root -e \"DROP DATABASE IF EXISTS nfm_eparts; CREATE DATABASE nfm_eparts CHARACTER SET utf8 COLLATE utf8_unicode_ci;\""
+	docker exec -it nfm_mysql_db bash -c "mysql --user=root -e \"DROP DATABASE IF EXISTS nfm_agconet; CREATE DATABASE nfm_agconet CHARACTER SET utf8 COLLATE utf8_unicode_ci;\""
 	docker exec -it nfm_mysql_db bash -c "mysql --user=root nfm_catalog < /dumps/nfm-catalog.sql"
 	docker exec -it nfm_backend bash -c "php yii migrate-eparts --interactive=0"
 

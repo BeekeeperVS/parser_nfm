@@ -23,6 +23,13 @@ $config = [
             'migrationTable' => '{{%system_migration}}',
             'db' => 'db2'
         ],
+        'migrate-agconet' => [
+            'class' => yii\console\controllers\MigrateController::class,
+            'migrationPath' => '@app/migrations/agconet',
+            'templateFile' => '@app/service/migration/views/migrationTemplate.php',
+            'migrationTable' => '{{%system_migration}}',
+            'db' => 'db3'
+        ],
     ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -42,8 +49,9 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db['db'],
-        'db2' => $db['db2']
+        'db' => $db['eparts'],
+        'db2' => $db['catalog'],
+        'db3' => $db['agconet']
     ],
     'params' => $params,
     /*

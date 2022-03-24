@@ -38,7 +38,7 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
     /**
      * @return array
      */
-    protected function getResponse(): array
+    public function getResponse(): array
     {
         return $this->response ?? [];
     }
@@ -107,7 +107,9 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
      */
     public function makeDataRequest(): array
     {
-        return [];
+        return [
+            'bearerToken' => \Yii::$app->params['parserConfig']['bearerToken'],
+        ];
     }
 
     /**

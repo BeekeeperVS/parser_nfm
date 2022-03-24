@@ -21,7 +21,7 @@ final class ParserCatalogAction extends AgconetBaseAction
     public function run()
     {
         $stepFactory = new AgconetStepParserFactory();
-        $stepParser = $stepFactory->makeStep(self::ACTION_TITLE, StepAgconetEnum::LOGIN_STEP, ['isParen' => true]);
+        $stepParser = $stepFactory->makeStep(self::ACTION_TITLE, StepAgconetEnum::SCHEME_DETAIL_STEP, ['isParen' => true]);
         $stepParser->run();
 //        $parserStep = ParserStep::find()->currentStep();
 //        $isParent = !empty($parserStep->childSteps);

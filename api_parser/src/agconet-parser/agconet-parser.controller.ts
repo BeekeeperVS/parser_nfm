@@ -73,7 +73,6 @@ export class AgconetParserController {
         return true;
     }
 
-
     @Post('model-groups')
     async modelGroups(@Body() dto: CategoryDto, @Res() res: Response) {
         try {
@@ -133,4 +132,5 @@ export class AgconetParserController {
         }
         return true;
     }
+    
 }

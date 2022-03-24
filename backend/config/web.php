@@ -44,8 +44,10 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db['db'],
-        'db2' => $db['db2'],
+
+        'db' => $db['eparts'],
+        'db2' => $db['catalog'],
+        'db3' => $db['agconet'],
 
         'urlManager' => [
             'enablePrettyUrl' => true,

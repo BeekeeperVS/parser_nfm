@@ -13,6 +13,6 @@ abstract class ParserStatusEnum implements EnumInterface
      */
     public static function getList(): array
     {
-        // TODO: Implement getList() method.
+        return [];// TODO: Implement getList() method.
     }
 }
