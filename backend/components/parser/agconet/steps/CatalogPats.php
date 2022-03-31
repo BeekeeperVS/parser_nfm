@@ -2,12 +2,13 @@
 
 namespace components\parser\agconet\steps;
 
-use app\models\common\service\ParserStep;
-use app\service\fileGenerate\PhpConfigFileGenerateService;
+use app\models\agconet\service\ParserStep;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 class CatalogPats extends AgconetBaseStep
 {
+    private string $stepTitle = StepAgconetEnum::CATALOG_PATS_STEP;
+    protected ?Brand $model;
 
     /**
      * @param $config
@@ -23,10 +24,27 @@ class CatalogPats extends AgconetBaseStep
      */
     public function run(): void
     {
-        parent::run();
+        if (!empty($this->model)) {
 
-        if ($this->isSuccess()) {
-            print_r($this->getResponse());
+            $this->model->status_parser = STATUS_PARSER_ACTIVE;
+            $this->model->save();
+
+            try {
+                parent::run();
+                $isErrorParser = false;
+            } catch (\Throwable $e) {
+                $isErrorParser = true;
+            }
+
+            if (!$isErrorParser && $this->isSuccess()) {
+                $this->model->status_parser = STATUS_PARSER_COMPLETE;
+
+            } else {
+                $this->model->status_parser = STATUS_PARSER_ERROR;
+            }
+            $this->model->save();
+        } else {
+            ParserStep::complete($this->parserName, $this->action, $this->stepTitle);
         }
     }
 
@@ -37,7 +55,7 @@ class CatalogPats extends AgconetBaseStep
     {
         return array_merge(parent::makeDataRequest(), [
             'brandTitle' => myUrlEncode('general publications'),
-            "categoryId" => "0dc58f37d9ce82cf7dd9d993adbdfe58"
+            'categoryId' => '0dc58f37d9ce82cf7dd9d993adbdfe58'
         ]);
     }
 }

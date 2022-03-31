@@ -2,12 +2,12 @@
 
 namespace components\parser\agconet\steps;
 
-use app\models\common\service\ParserStep;
-use app\service\fileGenerate\PhpConfigFileGenerateService;
+use app\models\agconet\service\ParserStep;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 class Brands extends AgconetBaseStep
 {
+    private string $stepTitle = StepAgconetEnum::BRANDS_STEP;
 
     /**
      * @param $config
@@ -26,7 +26,18 @@ class Brands extends AgconetBaseStep
         parent::run();
 
         if ($this->isSuccess()) {
-            print_r($this->getResponse());
+            $brands = $this->getResponseParam('null');
+
+            $batch_params = [];
+            foreach ($brands as $item) {
+                $batch_params[] = [$item];
+            }
+
+            \Yii::$app->db3->createCommand()->batchInsert('{{%brand}}', ['name'], $batch_params)->execute();
+
+            ParserStep::complete($this->parserName, $this->action, $this->stepTitle);
+        } else {
+            ParserStep::complete($this->parserName, $this->action, $this->stepTitle);
         }
     }
 

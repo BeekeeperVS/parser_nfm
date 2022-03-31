@@ -3,7 +3,6 @@
 namespace components\parser\agconet\steps;
 
 use components\parser\enum\ParserEnum;
-use JetBrains\PhpStorm\Pure;
 use yii\base\BaseObject;
 use yii\helpers\Json;
 
@@ -113,12 +112,12 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
     }
 
     /**
-     * @param string $param
+     * @param string|null $param
      * @return array|string|null
      */
-    protected function getResponseParam(string $param): array|string|null
+    protected function getResponseParam(?string $param): array|string|null
     {
-        return $this->response['data'][$param] ?? null;
+        return !empty($param) ? $this->response['data'][$param] : $this->response['data'];
     }
 
 

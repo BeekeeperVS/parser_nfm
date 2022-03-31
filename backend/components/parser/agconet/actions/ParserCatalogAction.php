@@ -2,11 +2,8 @@
 
 namespace components\parser\agconet\actions;
 
-use app\models\common\service\ParserStep;
 use components\parser\agconet\enum\StepAgconetEnum;
 use components\parser\agconet\steps\factory\AgconetStepParserFactory;
-use components\parser\eParts\enum\StepEpartsEnum;
-use components\parser\eParts\steps\factory\EPartsStepParserFactory;
 use components\parser\exception\ParserException;
 
 final class ParserCatalogAction extends AgconetBaseAction
@@ -21,7 +18,7 @@ final class ParserCatalogAction extends AgconetBaseAction
     public function run()
     {
         $stepFactory = new AgconetStepParserFactory();
-        $stepParser = $stepFactory->makeStep(self::ACTION_TITLE, StepAgconetEnum::SCHEME_DETAIL_STEP, ['isParen' => true]);
+        $stepParser = $stepFactory->makeStep(self::ACTION_TITLE, StepAgconetEnum::BRAND_ITEM_STEP, ['isParen' => true]);
         $stepParser->run();
 //        $parserStep = ParserStep::find()->currentStep();
 //        $isParent = !empty($parserStep->childSteps);
@@ -39,7 +36,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 //        }
 
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::PRODUCT_TYPES_STEP,
+//            StepAgconetEnum::PRODUCT_TYPES_STEP,
 //            [
 //                'brandId' => 2,
 //                'interiorBrandId' => 1
@@ -48,7 +45,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 
 
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::PRODUCT_LINES_STEP,
+//            StepAgconetEnum::PRODUCT_LINES_STEP,
 //            [
 //                'brandId' => 1,
 //                'epBrandId' => 2,
@@ -59,7 +56,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 
 
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::PRODUCT_LINES_STEP,
+//            StepAgconetEnum::PRODUCT_LINES_STEP,
 //            [
 //                'brandId' => 1,
 //                'epBrandId' => 2,
@@ -69,7 +66,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 //        );
 
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::PRODUCT_SERIES_STEP,
+//            StepAgconetEnum::PRODUCT_SERIES_STEP,
 //            [
 //                'brandId' => 1,
 //                'typeId' =>  9,
@@ -82,7 +79,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 
 
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::PRODUCT_MODELS_STEP,
+//            StepAgconetEnum::PRODUCT_MODELS_STEP,
 //            [
 //                'brandId' => 1,
 //                'typeId' =>  9,
@@ -96,7 +93,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 //        );
 
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::MODEL_FUNCTIONAL_GROUPS_STEP,
+//            StepAgconetEnum::MODEL_FUNCTIONAL_GROUPS_STEP,
 //            [
 //                'brandId' => 1,
 //                'modelId' =>  9,
@@ -107,7 +104,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 
 //        $modelFunctionalGroup = EpModelFunctionalGroup::findOne(1);
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::MODEL_ASSEMBLIES_STEP,
+//            StepAgconetEnum::MODEL_ASSEMBLIES_STEP,
 //            [
 //                'brandId' => $modelFunctionalGroup->productModel->type->brand->id,
 //                'modelId' => $modelFunctionalGroup->productModel->id,
@@ -120,7 +117,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 
 //        $assembly = EpAssembly::findOne(1);
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::ASSEMBLY_DETAILS_STEP,
+//            StepAgconetEnum::ASSEMBLY_DETAILS_STEP,
 //            [
 //                'brandId' => $assembly->modelFunctionalGroup->productModel->type->brand->id,
 //                'modelId' => $assembly->modelFunctionalGroup->productModel->id,
@@ -134,7 +131,7 @@ final class ParserCatalogAction extends AgconetBaseAction
 
 //        $assembly = EpAssembly::findOne(3);
 //        $stepParser = $stepFactory->makeStep(
-//            StepEpartsEnum::ASSEMBLY_PARTS_STEP,
+//            StepAgconetEnum::ASSEMBLY_PARTS_STEP,
 //            [
 //                'brandId' => $assembly->modelFunctionalGroup->productModel->type->brand->id,
 //                'modelId' => $assembly->modelFunctionalGroup->productModel->id,
@@ -160,69 +157,49 @@ final class ParserCatalogAction extends AgconetBaseAction
     {
         return [
             [
-                'step' => StepEpartsEnum::LOGIN_STEP,
+                'step' => StepAgconetEnum::LOGIN_STEP,
                 'parentStep' => null,
                 'sortOrder' => 1
             ],
             [
-                'step' => StepEpartsEnum::BRANDS_STEP,
+                'step' => StepAgconetEnum::BRANDS_STEP,
                 'parentStep' => null,
                 'sortOrder' => 2
             ],
             [
-                'step' => StepEpartsEnum::PRODUCT_TYPES_STEP,
+                'step' => StepAgconetEnum::BRAND_ITEM_STEP,
                 'parentStep' => null,
                 'sortOrder' => 3
             ],
             [
-                'step' => StepEpartsEnum::PRODUCT_LINES_STEP,
+                'step' => StepAgconetEnum::CATALOG_PATS_STEP,
                 'parentStep' => null,
                 'sortOrder' => 4
             ],
             [
-                'step' => StepEpartsEnum::PRODUCT_SERIES_STEP,
+                'step' => StepAgconetEnum::MODEL_GROUPS_STEP,
                 'parentStep' => null,
                 'sortOrder' => 5
             ],
             [
-                'step' => StepEpartsEnum::PRODUCT_MODELS_STEP,
+                'step' => StepAgconetEnum::MODELS_STEP,
                 'parentStep' => null,
                 'sortOrder' => 6
             ],
             [
-                'step' => StepEpartsEnum::MODEL_FUNCTIONAL_GROUPS_STEP,
+                'step' => StepAgconetEnum::MODEL_SCHEMES_STEP,
                 'parentStep' => null,
                 'sortOrder' => 7
             ],
             [
-                'step' => StepEpartsEnum::MODEL_ASSEMBLIES_STEP,
+                'step' => StepAgconetEnum::SCHEMES_STEP,
                 'parentStep' => null,
                 'sortOrder' => 8
             ],
             [
-                'step' => StepEpartsEnum::ASSEMBLY_PARTS_STEP,
+                'step' => StepAgconetEnum::SCHEME_DETAIL_STEP,
                 'parentStep' => null,
                 'sortOrder' => 9
-            ],
-            [
-                'step' => StepEpartsEnum::ASSEMBLY_DETAILS_STEP,
-                'parentStep' => StepEpartsEnum::ASSEMBLY_PARTS_STEP,
-                'sortOrder' => 10
-            ],
-            [
-                'step' => StepEpartsEnum::PART_DETAILS_STEP,
-                'parentStep' => null,
-                'sortOrder' => 10
-            ],
-            [
-                'step' => StepEpartsEnum::PART_SUBSTITUTIONS_STEP,
-                'parentStep' => StepEpartsEnum::PART_DETAILS_STEP,
-                'sortOrder' => 12
-            ],
-            [
-                'step' => StepEpartsEnum::PART_KITS_STEP,
-                'parentStep' => StepEpartsEnum::PART_DETAILS_STEP,
-                'sortOrder' => 13
             ]
         ];
     }
