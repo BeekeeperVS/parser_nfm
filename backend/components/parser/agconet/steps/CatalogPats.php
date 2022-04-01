@@ -2,7 +2,9 @@
 
 namespace components\parser\agconet\steps;
 
+use app\models\agconet\service\Brand;
 use app\models\agconet\service\ParserStep;
+use app\models\agconet\service\PartsBook;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 class CatalogPats extends AgconetBaseStep
@@ -37,6 +39,19 @@ class CatalogPats extends AgconetBaseStep
             }
 
             if (!$isErrorParser && $this->isSuccess()) {
+                $partsBooks = $this->getResponseParam('subcategories');
+                foreach ($partsBooks as $name => $key) {
+                    if ($name === '$id') {
+                        continue;
+                    }
+                    $partsBook = new PartsBook();
+                    $partsBook->brand_id = $this->model->id;
+                    $partsBook->name = $name;
+                    $partsBook->key = $key;
+                    if (!$partsBook->save()) {
+                        print_r($partsBook->errors);
+                    }
+                }
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
 
             } else {
@@ -54,8 +69,21 @@ class CatalogPats extends AgconetBaseStep
     public function makeDataRequest(): array
     {
         return array_merge(parent::makeDataRequest(), [
-            'brandTitle' => myUrlEncode('general publications'),
-            'categoryId' => '0dc58f37d9ce82cf7dd9d993adbdfe58'
+            'brandTitle' => myUrlEncode($this->model->name),
+            'categoryId' => $this->model->parts_books_key//'0dc58f37d9ce82cf7dd9d993adbdfe58'
         ]);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->model = $this->isChild ? $this->getParentInstance() : Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
+
+        if ($this->isParen) {
+            $this->setParentInstance($this->stepTitle, $this->model);
+        }
     }
 }

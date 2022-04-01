@@ -2,13 +2,15 @@
 
 namespace components\parser\agconet\steps;
 
+use app\models\agconet\service\Model;
+use app\models\agconet\service\ModelGroup;
 use app\models\agconet\service\ParserStep;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 class Models extends AgconetBaseStep
 {
     private string $stepTitle = StepAgconetEnum::MODELS_STEP;
-    protected ?Brand $model;
+    protected ?ModelGroup $model;
 
     /**
      * @param $config
@@ -37,6 +39,21 @@ class Models extends AgconetBaseStep
             }
 
             if (!$isErrorParser && $this->isSuccess()) {
+
+                $models = $this->getResponseParam('books');
+                foreach ($models as $item) {
+                    $model = new Model();
+                    $model->model_id = $this->model->id;
+                    $model->name = $item['booktitle'];
+                    $model->site_id = $item['siteId'];
+                    $model->book_id = (int)$item['bookId'];
+                    $model->first_page_id = $item['firstPageId'];
+                    $model->status = (int)$item['status'];
+                    if (!$model->save()) {
+                        print_r($model->errors);
+                    }
+                }
+
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
 
             } else {
@@ -54,8 +71,20 @@ class Models extends AgconetBaseStep
     public function makeDataRequest(): array
     {
         return array_merge(parent::makeDataRequest(), [
-            'brandTitle' => myUrlEncode('general publications'),
-            'categoryId' => '013261fc4d392f89be9b68f2ed0b27e2'
+            'brandTitle' => myUrlEncode($this->model->partsBook->brand->name),
+            'categoryId' => $this->model->key//'013261fc4d392f89be9b68f2ed0b27e2'
         ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->model = $this->isChild ? $this->getParentInstance() : ModelGroup::findOne(['status_parser' => STATUS_PARSER_NEW]);
+
+        if ($this->isParen && !empty($this->model)) {
+            $this->setParentInstance($this->stepTitle, $this->model);
+        }
     }
 }

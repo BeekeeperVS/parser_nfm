@@ -20,7 +20,7 @@ class m220331_142405_create_table_model extends MigrationService
             'site_id' => $this->string()->notNull(),
             'book_id' => $this->integer()->notNull(),
             'first_page_id' => $this->string(),
-            'key' => $this->string()->notNull(),
+            'key' => $this->string(),
             'status' => $this->integer()->null(),
             'status_parser' => $this->integer(10)->defaultValue(STATUS_PARSER_NEW),
             'created_at' => $this->dateTime()->notNull()->defaultValue(new Expression('NOW()')),

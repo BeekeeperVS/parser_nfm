@@ -46,7 +46,7 @@ class Model extends \app\service\db\ActiveRecordService
     public function rules()
     {
         return [
-            [['model_id', 'name', 'site_id', 'book_id', 'key'], 'required'],
+            [['model_id', 'name', 'site_id', 'book_id'], 'required'],
             [['model_id', 'book_id', 'status', 'status_parser'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['name', 'site_id', 'first_page_id', 'key'], 'string', 'max' => 255],

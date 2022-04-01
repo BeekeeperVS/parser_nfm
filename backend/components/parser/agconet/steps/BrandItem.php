@@ -38,7 +38,7 @@ class BrandItem extends AgconetBaseStep
             }
 
             if (!$isErrorParser && $this->isSuccess()) {
-                $subcategories= $this->getResponseParam('subcategories');
+                $subcategories = $this->getResponseParam('subcategories');
 
                 $this->model->parts_books_key = $subcategories['каталоги запасных частей'] ?? null;
                 $this->model->workshop_service_manuals_key = $subcategories['сервисные публикации'] ?? null;
@@ -68,6 +68,10 @@ class BrandItem extends AgconetBaseStep
      */
     public function init()
     {
-        $this->model = Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
+        $this->model = $this->isChild ? $this->getParentInstance() : Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
+
+        if ($this->isParen && !empty($this->model)) {
+            $this->setParentInstance($this->stepTitle, $this->model);
+        }
     }
 }

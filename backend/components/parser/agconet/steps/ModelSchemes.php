@@ -2,13 +2,14 @@
 
 namespace components\parser\agconet\steps;
 
+use app\models\agconet\service\Model;
 use app\models\agconet\service\ParserStep;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 class ModelSchemes extends AgconetBaseStep
 {
     private string $stepTitle = StepAgconetEnum::MODEL_SCHEMES_STEP;
-    protected ?Brand $model;
+    protected ?Model $model;
 
     /**
      * @param $config
@@ -37,6 +38,13 @@ class ModelSchemes extends AgconetBaseStep
             }
 
             if (!$isErrorParser && $this->isSuccess()) {
+
+                $modelSchemeKey = $this->getResponseParam(null)[0];
+                $this->model->key = $modelSchemeKey;
+                if (!$this->model->save()) {
+                    print_r($this->model->errors);
+                }
+
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
 
             } else {
@@ -58,4 +66,17 @@ class ModelSchemes extends AgconetBaseStep
             'modelId' => 4820992110
         ]);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->model = $this->isChild ? $this->getParentInstance() : Model::findOne(['status_parser' => STATUS_PARSER_NEW]);
+
+        if ($this->isParen && !empty($this->model)) {
+            $this->setParentInstance($this->stepTitle, $this->model);
+        }
+    }
+
 }

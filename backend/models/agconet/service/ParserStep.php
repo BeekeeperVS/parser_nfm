@@ -20,6 +20,7 @@ use Yii;
  */
 class ParserStep extends \app\models\common\service\ParserStep
 {
+
     /**
      * {@inheritdoc}
      */
@@ -36,12 +37,4 @@ class ParserStep extends \app\models\common\service\ParserStep
         return Yii::$app->get('db3');
     }
 
-    /**
-     * {@inheritdoc}
-     * @return \app\models\agconet\query\ParserStepQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \app\models\agconet\query\ParserStepQuery(get_called_class());
-    }
 }

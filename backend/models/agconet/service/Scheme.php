@@ -2,6 +2,7 @@
 
 namespace app\models\agconet\service;
 
+use components\parser\agconet\steps\Schemes;
 use Yii;
 
 /**
@@ -30,105 +31,8 @@ use Yii;
  * @property Part[] $parts
  * @property Scheme[] $schemes
  */
-class Scheme extends \app\service\db\ActiveRecordService
+class Scheme extends \app\models\agconet\db\Scheme
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'agc_scheme';
-    }
-
-    /**
-     * @return \yii\db\Connection the database connection used by this AR class.
-     */
-    public static function getDb()
-    {
-        return Yii::$app->get('db3');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['model_id', 'name', 'key', 'level'], 'required'],
-            [['model_id', 'level', 'has_child', 'page_number', 'status_parser'], 'integer'],
-            [['image_data', 'created_at', 'updated_at'], 'safe'],
-            [['name', 'key', 'parent_key', 'site_id', 'page_info', 'display', 'display_short', 'image_url'], 'string', 'max' => 255],
-            [['model_id'], 'exist', 'skipOnError' => true, 'targetClass' => Model::className(), 'targetAttribute' => ['model_id' => 'id']],
-            [['parent_key'], 'exist', 'skipOnError' => true, 'targetClass' => Scheme::className(), 'targetAttribute' => ['parent_key' => 'key']],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'model_id' => 'Model ID',
-            'name' => 'Name',
-            'key' => 'Key',
-            'parent_key' => 'Parent Key',
-            'level' => 'Level',
-            'has_child' => 'Has Child',
-            'site_id' => 'Site ID',
-            'page_info' => 'Page Info',
-            'display' => 'Display',
-            'display_short' => 'Display Short',
-            'page_number' => 'Page Number',
-            'image_url' => 'Image Url',
-            'image_data' => 'Image Data',
-            'status_parser' => 'Status Parser',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
-
-    /**
-     * Gets query for [[Model]].
-     *
-     * @return \yii\db\ActiveQuery|\app\models\agconet\query\ModelQuery
-     */
-    public function getModel()
-    {
-        return $this->hasOne(Model::className(), ['id' => 'model_id']);
-    }
-
-    /**
-     * Gets query for [[ParentKey]].
-     *
-     * @return \yii\db\ActiveQuery|\app\models\agconet\query\SchemeQuery
-     */
-    public function getParentKey()
-    {
-        return $this->hasOne(Scheme::className(), ['key' => 'parent_key']);
-    }
-
-    /**
-     * Gets query for [[Parts]].
-     *
-     * @return \yii\db\ActiveQuery|\app\models\agconet\query\PartQuery
-     */
-    public function getParts()
-    {
-        return $this->hasMany(Part::className(), ['scheme_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Schemes]].
-     *
-     * @return \yii\db\ActiveQuery|\app\models\agconet\query\SchemeQuery
-     */
-    public function getSchemes()
-    {
-        return $this->hasMany(Scheme::className(), ['parent_key' => 'key']);
-    }
-
     /**
      * {@inheritdoc}
      * @return \app\models\agconet\query\SchemeQuery the active query used by this AR class.

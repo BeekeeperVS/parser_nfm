@@ -2,13 +2,16 @@
 
 namespace components\parser\agconet\steps;
 
+use app\models\agconet\service\Brand;
+use app\models\agconet\service\ModelGroup;
 use app\models\agconet\service\ParserStep;
+use app\models\agconet\service\PartsBook;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 class ModelGroups extends AgconetBaseStep
 {
     private string $stepTitle = StepAgconetEnum::MODEL_GROUPS_STEP;
-    protected ?Brand $model;
+    protected ?PartsBook $model;
 
     /**
      * @param $config
@@ -37,6 +40,21 @@ class ModelGroups extends AgconetBaseStep
             }
 
             if (!$isErrorParser && $this->isSuccess()) {
+
+                $modelGroups = $this->getResponseParam('subcategories');
+                foreach ($modelGroups as $name => $key) {
+                    if ($name === '$id') {
+                        continue;
+                    }
+                    $modelGroup = new ModelGroup();
+                    $modelGroup->parts_book_id = $this->model->id;
+                    $modelGroup->name = $name;
+                    $modelGroup->key = $key;
+                    if (!$modelGroup->save()) {
+                        print_r($modelGroup->errors);
+                    }
+                }
+
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
 
             } else {
@@ -55,8 +73,20 @@ class ModelGroups extends AgconetBaseStep
     public function makeDataRequest(): array
     {
         return array_merge(parent::makeDataRequest(), [
-            'brandTitle' => myUrlEncode('general publications'),
-            'categoryId' => '1dd2b039c0b9233051cde35dd6bde392'
+            'brandTitle' => myUrlEncode($this->model->brand->name),
+            'categoryId' => $this->model->key//'1dd2b039c0b9233051cde35dd6bde392'
         ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        $this->model = $this->isChild ? $this->getParentInstance() : PartsBook::findOne(['status_parser' => STATUS_PARSER_NEW]);
+
+        if ($this->isParen && !empty($this->model)) {
+            $this->setParentInstance($this->stepTitle, $this->model);
+        }
     }
 }
