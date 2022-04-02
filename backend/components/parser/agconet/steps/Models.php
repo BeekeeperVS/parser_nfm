@@ -30,7 +30,6 @@ class Models extends AgconetBaseStep
 
             $this->model->status_parser = STATUS_PARSER_ACTIVE;
             $this->model->save();
-
             try {
                 parent::run();
                 $isErrorParser = false;
@@ -39,14 +38,13 @@ class Models extends AgconetBaseStep
             }
 
             if (!$isErrorParser && $this->isSuccess()) {
-
                 $models = $this->getResponseParam('books');
                 foreach ($models as $item) {
                     $model = new Model();
                     $model->model_id = $this->model->id;
                     $model->name = $item['booktitle'];
                     $model->site_id = $item['siteId'];
-                    $model->book_id = (int)$item['bookId'];
+                    $model->book_id = $item['bookId'];
                     $model->first_page_id = $item['firstPageId'];
                     $model->status = (int)$item['status'];
                     if (!$model->save()) {

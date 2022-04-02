@@ -11,9 +11,9 @@ use Yii;
  * @property int $model_id
  * @property string $name
  * @property string $site_id
- * @property int $book_id
+ * @property string|null $book_id
  * @property string|null $first_page_id
- * @property string $key
+ * @property string|null $key
  * @property int|null $status
  * @property int|null $status_parser
  * @property string $created_at
@@ -46,10 +46,10 @@ class Model extends \app\service\db\ActiveRecordService
     public function rules()
     {
         return [
-            [['model_id', 'name', 'site_id', 'book_id'], 'required'],
-            [['model_id', 'book_id', 'status', 'status_parser'], 'integer'],
+            [['model_id', 'name', 'site_id'], 'required'],
+            [['model_id', 'status', 'status_parser'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name', 'site_id', 'first_page_id', 'key'], 'string', 'max' => 255],
+            [['name', 'site_id', 'book_id', 'first_page_id', 'key'], 'string', 'max' => 255],
             [['model_id'], 'exist', 'skipOnError' => true, 'targetClass' => ModelGroup::className(), 'targetAttribute' => ['model_id' => 'id']],
         ];
     }

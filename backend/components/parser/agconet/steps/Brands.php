@@ -26,7 +26,7 @@ class Brands extends AgconetBaseStep
         parent::run();
 
         if ($this->isSuccess()) {
-            $brands = $this->getResponseParam('null');
+            $brands = $this->getResponseParam(null);
 
             $batch_params = [];
             foreach ($brands as $item) {

@@ -41,18 +41,19 @@ class Schemes extends AgconetBaseStep
             if (!$isErrorParser && $this->isSuccess()) {
 
                 $schemes = $this->getResponseParam(null);
-//                print_r($schemes);die;
-                foreach ($schemes as $item) {
-                    if ($item['level'] != 1) continue;
-                    $this->saveSchemeData($item);
-                }
-                foreach ($schemes as $item) {
-                    if ($item['level'] != 2) continue;
-                    $this->saveSchemeData($item);
-                }
-                foreach ($schemes as $item) {
-                    if ($item['level'] != 3) continue;
-                    $this->saveSchemeData($item);
+                if (is_array($schemes)) {
+                    foreach ($schemes as $item) {
+                        if ($item['level'] != 1) continue;
+                        $this->saveSchemeData($item);
+                    }
+                    foreach ($schemes as $item) {
+                        if ($item['level'] != 2) continue;
+                        $this->saveSchemeData($item);
+                    }
+                    foreach ($schemes as $item) {
+                        if ($item['level'] != 3) continue;
+                        $this->saveSchemeData($item);
+                    }
                 }
 
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
@@ -72,9 +73,9 @@ class Schemes extends AgconetBaseStep
     public function makeDataRequest(): array
     {
         return array_merge(parent::makeDataRequest(), [
-            'brandTitle' => $this->model->site_id,//'generalpublications',
-            'modelId' => $this->model->behaviors,//4820992110,
-            'tocGuid' => $this->model->key//'bf03b76a-fd7a-774f-354d-f9db0ba593a0'
+            'brandTitle' => $this->model->site_id,
+            'modelId' => $this->model->book_id,
+            'tocGuid' => $this->model->key
         ]);
     }
 

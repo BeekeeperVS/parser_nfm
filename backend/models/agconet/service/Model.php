@@ -11,7 +11,7 @@ use Yii;
  * @property int $model_id
  * @property string $name
  * @property string $site_id
- * @property int $book_id
+ * @property string $book_id
  * @property string|null $first_page_id
  * @property string $key
  * @property int|null $status

@@ -18,7 +18,7 @@ use Yii;
  * @property Model[] $models
  * @property PartsBook $partsBook
  */
-class ModelGroup extends \app\models\agconet\db\Model
+class ModelGroup extends \app\models\agconet\db\ModelGroup
 {
     /**
      * {@inheritdoc}

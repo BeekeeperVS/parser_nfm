@@ -2,7 +2,6 @@
 
 namespace components\parser\agconet\steps;
 
-use app\models\agconet\service\Brand;
 use app\models\agconet\service\ModelGroup;
 use app\models\agconet\service\ParserStep;
 use app\models\agconet\service\PartsBook;

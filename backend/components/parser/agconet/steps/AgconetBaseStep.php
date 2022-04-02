@@ -15,7 +15,7 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
     protected string $parserName  = ParserEnum::AGCONET_PARSER;
 
     private string $apiMethod;
-    private array $response;
+    public array $response;
 
     /**
      * {@inheritDoc}

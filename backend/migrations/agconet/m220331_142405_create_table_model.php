@@ -18,7 +18,7 @@ class m220331_142405_create_table_model extends MigrationService
             'model_id' =>  $this->integer()->notNull(),
             'name' => $this->string()->notNull(),
             'site_id' => $this->string()->notNull(),
-            'book_id' => $this->integer()->notNull(),
+            'book_id' => $this->string(),
             'first_page_id' => $this->string(),
             'key' => $this->string(),
             'status' => $this->integer()->null(),
