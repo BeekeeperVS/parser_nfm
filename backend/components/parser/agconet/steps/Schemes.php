@@ -98,8 +98,6 @@ class Schemes extends AgconetBaseStep
         $model->display_short = $item['displayShort'];
         $model->page_number = (int)$item['pageNumber'];
         $model->status_parser = ($model->level != 3) ? 200 : 0;
-//                    $model->image_url = $item[''];
-//                    $model->image_data = $item[''];
         if (!$model->save()) {
             print_r($model->errors);
         }

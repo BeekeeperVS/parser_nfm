@@ -46,7 +46,7 @@ class Part extends \app\service\db\ActiveRecordService
     public function rules()
     {
         return [
-            [['scheme_id', 'name', 'key', 'article', 'quantity'], 'required'],
+            [['scheme_id', 'name', 'key'], 'required'],
             [['scheme_id', 'quantity', 'item_id', 'status_parser'], 'integer'],
             [['detail_parser', 'created_at', 'updated_at'], 'safe'],
             [['name', 'key', 'article', 'specification'], 'string', 'max' => 255],

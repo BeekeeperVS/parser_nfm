@@ -30,6 +30,11 @@ class ParserStep extends \app\models\common\db\ParserStep
         return 'parser_step';
     }
 
+    public static function setNew(string $parserName, string $action, string $step)
+    {
+        self::updateAll(['status' => STATUS_PARSER_NEW], ['and', ['title' => $step], ['parser_name' => $parserName], ['action' => $action]]);
+    }
+
     public static function complete(string $parserName, string $action, string $step)
     {
         self::updateAll(['status' => STATUS_PARSER_COMPLETE], ['and', ['title' => $step], ['parser_name' => $parserName], ['action' => $action]]);

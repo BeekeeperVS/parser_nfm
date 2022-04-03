@@ -19,7 +19,7 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
     protected string $stepTitle;
     private string $dataModelClass;
     private string $apiMethod;
-    private array $response;
+    public array $response;
 
     public function __construct($config = [])
     {
@@ -154,7 +154,7 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
     public function makeDataRequest(): array
     {
         return [
-            'bearerToken' => \Yii::$app->params['parserConfig']['bearerToken'],
+            'bearerToken' => \Yii::$app->params['agconetConfig']['bearerToken'],
         ];
     }
 
@@ -164,7 +164,14 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
      */
     protected function getResponseParam(?string $param): array|string|null
     {
-        return !empty($param) ? $this->response['data'][$param] : $this->response['data'];
+        switch (true) {
+            case empty($param):
+                return $this->response['data'];
+            case isset($this->response['data'][$param]):
+                return $this->response['data'][$param];
+            default:
+                return null;
+        }
     }
 
 

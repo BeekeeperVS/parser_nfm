@@ -3,6 +3,7 @@
 namespace components\parser\agconet\steps;
 
 use app\models\agconet\service\ParserStep;
+use app\models\agconet\service\Part;
 use app\models\agconet\service\Scheme;
 use components\parser\agconet\enum\StepAgconetEnum;
 
@@ -42,6 +43,31 @@ class SchemeDetail extends AgconetBaseStep
             }
 
             if (!$isErrorParser && $this->isSuccess()) {
+                $page = $this->getResponseParam('page');
+                $this->model->image_url = $this->getResponseParam('imageUrl');
+                $this->model->image_data = $page['img'];
+                if (!$this->model->save()) {
+                    print_r($this->model->errors);
+                }
+
+                $entries = $page['entries'];
+
+                if (is_array($entries)) {
+                    foreach ($entries as $item) {
+                        $part = new Part();
+                        $part->scheme_id = $this->model->id;//$item[''];
+                        $part->name = $item['partdescription'];
+                        $part->article = $item['partnumber'];
+                        $part->key = $item['guid'];
+                        $part->quantity = (int)$item['partqty'] ?? null;
+                        $part->item_id = (int)$item['itemid'] ?? null;
+                        $part->specification = $item['TechSpec'] ?? null;
+                        $part->detail_parser = $item;
+                        if (!$part->save()) {
+                            print_r($part->errors);
+                        }
+                    }
+                }
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
 
             } else {

@@ -26,7 +26,6 @@ class Authorization extends AgconetBaseStep
      */
     public function run(): void
     {
-//        print_r('ddddd');die;
         parent::run();
 
         if ($this->isSuccess()) {
@@ -35,7 +34,7 @@ class Authorization extends AgconetBaseStep
             $phpGenerate = new PhpConfigFileGenerateService();
             $phpGenerate->put('bearerToken', $bearerToken);
             $phpGenerate->put('cookies', $cookies);
-            $phpGenerate->install('parserConfig.php', \Yii::getAlias("@config"));
+            $phpGenerate->install('agconet.php', \Yii::getAlias("@config/parser"));
         }
     }
 }

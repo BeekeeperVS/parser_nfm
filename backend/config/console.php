@@ -7,6 +7,7 @@ $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'container' => require __DIR__ . '/container/_console.php',
     'controllerNamespace' => 'app\commands',
     'controllerMap' => [
         'migrate-eparts' => [

@@ -2,55 +2,44 @@
 
 namespace app\commands;
 
+use app\models\agconet\service\ParserStep;
 use components\parser\agconet\enum\ActionAgconetEnum;
+use components\parser\agconet\enum\StepAgconetEnum;
 use components\parser\enum\ParserEnum;
 use components\parser\eParts\enum\ActionEPartsEnum;
 use components\parser\exception\ParserException;
 use components\parser\factory\ParserFactory;
+use components\parser\factory\ParserFactoryInterface;
 
 class AgconetParserController extends \yii\console\Controller
 {
+
+    private ParserFactoryInterface $parserFactory;
+
+    /**
+     * @param $id
+     * @param $module
+     * @param ParserFactoryInterface $parserFactory
+     * @param $config
+     */
+    public function __construct($id, $module, ParserFactoryInterface $parserFactory, $config = [])
+    {
+        parent::__construct($id, $module, $config);
+        $this->parserFactory = $parserFactory;
+    }
+
     /**
      * @return void
      * @throws ParserException
      */
-    public function actionTest() {
-        $parserFactory = new ParserFactory();
-        $parser = $parserFactory->make(ParserEnum::AGCONET_PARSER);
+    public function actionStart()
+    {
+        $parser = $this->parserFactory->make(ParserEnum::AGCONET_PARSER);
         $parser->run(ActionAgconetEnum::PARSER_CATALOG_ACTION);
-
-        print_r("\n");
     }
 
-    public function actionIdx()
+    public function actionLogin()
     {
-
-
-        $cookies = '';
-        foreach (\Yii::$app->params['parserConfig']['cookies'] as $item) {
-            $cookies .= "$item[name]=$item[value]; ";
-        }
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://net.agcocorp.com/agconet/ZMAIN.ASPX?ID=idx001&NR=139&B=agco',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'authorization:SAPISIDHASH 1645447395_53506a4e761d8c1a4df8d405e029636a1493e5b0_u',
-                'Cookie: '.$cookies
-            ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        echo $response;
-
+        ParserStep::setNew(ParserEnum::AGCONET_PARSER, ActionAgconetEnum::PARSER_CATALOG_ACTION, StepAgconetEnum::LOGIN_STEP);
     }
 }

@@ -18,6 +18,7 @@ build:
 	sudo chmod 777 -R database
 	sudo rm -rf database/*
 	rm -rf runtime/dockerLogs/*
+	cp -rp docker/backend/environment/config/* backend/config/
 	docker-compose -f docker-compose.yml build
 	docker-compose -f docker-compose.yml up
 	make init-db
@@ -28,6 +29,7 @@ build-local:
 	sudo chmod 777 -R database
 	sudo rm -rf database/*
 	rm -rf runtime/dockerLogs/*
+	cp -rp docker/backend/environment/config/* backend/config/
 	docker-compose -f docker-compose.local.yml build
 	make init-db
 

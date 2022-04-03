@@ -36,7 +36,7 @@ tests/_support/_generated
 /backend/.vagrant
 /backend/vendor
 /backend/config/db.php
-
+/backend/config/parser
 
 #Identical files
 */.idea

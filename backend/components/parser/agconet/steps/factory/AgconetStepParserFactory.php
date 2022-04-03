@@ -10,6 +10,7 @@ use components\parser\agconet\steps\CatalogPats;
 use components\parser\agconet\steps\ModelGroups;
 use components\parser\agconet\steps\Models;
 use components\parser\agconet\steps\ModelSchemes;
+use components\parser\agconet\steps\SchemeDetail;
 use components\parser\agconet\steps\Schemes;
 use components\parser\enum\ParserEnum;
 use components\parser\agconet\steps\Authorization;
@@ -48,7 +49,8 @@ class AgconetStepParserFactory implements AgconetStepParserFactoryInterface
             StepAgconetEnum::MODEL_GROUPS_STEP => ModelGroups::class,
             StepAgconetEnum::MODELS_STEP => Models::class,
             StepAgconetEnum::MODEL_SCHEMES_STEP => ModelSchemes::class,
-            StepAgconetEnum::SCHEMES_STEP => Schemes::class
+            StepAgconetEnum::SCHEMES_STEP => Schemes::class,
+            StepAgconetEnum::SCHEME_DETAIL_STEP => SchemeDetail::class
         ];
     }
 
