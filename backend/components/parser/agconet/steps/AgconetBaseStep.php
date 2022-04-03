@@ -4,6 +4,7 @@ namespace components\parser\agconet\steps;
 
 use components\parser\enum\ParserEnum;
 use yii\base\BaseObject;
+use yii\db\ActiveRecord;
 use yii\helpers\Json;
 
 abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterface
@@ -11,11 +12,43 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
     use ParentInstanseTait;
 
     public string $action;
+    public ActiveRecord $model;
 
-    protected string $parserName  = ParserEnum::AGCONET_PARSER;
+    protected string $parserName = ParserEnum::AGCONET_PARSER;
 
+    protected string $stepTitle;
+    private string $dataModelClass;
     private string $apiMethod;
-    public array $response;
+    private array $response;
+
+    public function __construct($config = [])
+    {
+        foreach ($config as $params => $value) {
+            switch ($params) {
+                case 'stepTitle':
+                case 'dataModelClass':
+                case 'apiMethod':
+                    $this->{$params} = $value;
+                    unset($config[$params]);
+                    break;
+            }
+        }
+        parent::__construct($config);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        if (!isset($this->dataModelClass)) return;
+
+        $this->model = $this->isChild ? $this->getParentInstance() : $this->dataModelClass::findOne(['status_parser' => STATUS_PARSER_NEW]);
+
+        if ($this->isParen && !empty($this->model)) {
+            $this->setParentInstance($this->stepTitle, $this->model);
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -65,6 +98,20 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
     protected function setApiMethod(string $apiMethod): void
     {
         $this->apiMethod = '/' . $apiMethod;
+    }
+
+    /**
+     * @param string $modelClassName
+     * @return void
+     */
+    protected function setDataModel(string $modelClassName)
+    {
+        $this->dataModelClass = $modelClassName;
+    }
+
+    protected function setStepTitle(string $stepTitle)
+    {
+        $this->stepTitle = $stepTitle;
     }
 
     /**

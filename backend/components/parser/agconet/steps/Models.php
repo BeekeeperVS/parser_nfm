@@ -7,18 +7,22 @@ use app\models\agconet\service\ModelGroup;
 use app\models\agconet\service\ParserStep;
 use components\parser\agconet\enum\StepAgconetEnum;
 
+/**
+ * @property ModelGroup $model
+ */
 class Models extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::MODELS_STEP;
-    protected ?ModelGroup $model;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('models');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::MODELS_STEP,
+            'dataModelClass' => ModelGroup::class,
+            'apiMethod' => '/models'
+        ]));
     }
 
     /**
@@ -74,15 +78,15 @@ class Models extends AgconetBaseStep
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        $this->model = $this->isChild ? $this->getParentInstance() : ModelGroup::findOne(['status_parser' => STATUS_PARSER_NEW]);
-
-        if ($this->isParen && !empty($this->model)) {
-            $this->setParentInstance($this->stepTitle, $this->model);
-        }
-    }
+//    /**
+//     * @inheritDoc
+//     */
+//    public function init()
+//    {
+//        $this->model = $this->isChild ? $this->getParentInstance() : ModelGroup::findOne(['status_parser' => STATUS_PARSER_NEW]);
+//
+//        if ($this->isParen && !empty($this->model)) {
+//            $this->setParentInstance($this->stepTitle, $this->model);
+//        }
+//    }
 }

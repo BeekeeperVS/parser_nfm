@@ -6,18 +6,23 @@ use app\models\agconet\service\Model;
 use app\models\agconet\service\ParserStep;
 use components\parser\agconet\enum\StepAgconetEnum;
 
+
+/**
+ * @property Model $model
+ */
 class ModelSchemes extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::MODEL_SCHEMES_STEP;
-    protected ?Model $model;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('model-schemes');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::MODEL_SCHEMES_STEP,
+            'dataModelClass' => Model::class,
+            'apiMethod' => '/model-schemes'
+        ]));
     }
 
     /**
@@ -62,21 +67,21 @@ class ModelSchemes extends AgconetBaseStep
     public function makeDataRequest(): array
     {
         return array_merge(parent::makeDataRequest(), [
-            'brandTitle' => 'generalpublications',
-            'modelId' => 4820992110
+            'brandTitle' => $this->model->site_id,//'generalpublications',
+            'modelId' => $this->model->book_id//4820992110
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        $this->model = $this->isChild ? $this->getParentInstance() : Model::findOne(['status_parser' => STATUS_PARSER_NEW]);
-
-        if ($this->isParen && !empty($this->model)) {
-            $this->setParentInstance($this->stepTitle, $this->model);
-        }
-    }
+//    /**
+//     * @inheritDoc
+//     */
+//    public function init()
+//    {
+//        $this->model = $this->isChild ? $this->getParentInstance() : Model::findOne(['status_parser' => STATUS_PARSER_NEW]);
+//
+//        if ($this->isParen && !empty($this->model)) {
+//            $this->setParentInstance($this->stepTitle, $this->model);
+//        }
+//    }
 
 }

@@ -7,18 +7,22 @@ use app\models\agconet\service\ParserStep;
 use app\models\agconet\service\Scheme;
 use components\parser\agconet\enum\StepAgconetEnum;
 
+/**
+ * @property Model $model
+ */
 class Schemes extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::SCHEMES_STEP;
-    protected ?Model $model;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('schemes');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::SCHEMES_STEP,
+            'dataModelClass' => Model::class,
+            'apiMethod' => '/schemes'
+        ]));
     }
 
     /**
@@ -79,18 +83,6 @@ class Schemes extends AgconetBaseStep
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        $this->model = $this->isChild ? $this->getParentInstance() : Model::findOne(['status_parser' => STATUS_PARSER_NEW]);
-
-        if ($this->isParen && !empty($this->model)) {
-            $this->setParentInstance($this->stepTitle, $this->model);
-        }
-    }
-
     private function saveSchemeData(array $item)
     {
         $model = new Scheme();
@@ -105,6 +97,7 @@ class Schemes extends AgconetBaseStep
         $model->display = $item['display'];
         $model->display_short = $item['displayShort'];
         $model->page_number = (int)$item['pageNumber'];
+        $model->status_parser = ($model->level != 3) ? 200 : 0;
 //                    $model->image_url = $item[''];
 //                    $model->image_data = $item[''];
         if (!$model->save()) {

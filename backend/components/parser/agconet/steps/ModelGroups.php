@@ -7,18 +7,22 @@ use app\models\agconet\service\ParserStep;
 use app\models\agconet\service\PartsBook;
 use components\parser\agconet\enum\StepAgconetEnum;
 
+/**
+ * @property PartsBook $model
+ */
 class ModelGroups extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::MODEL_GROUPS_STEP;
-    protected ?PartsBook $model;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('model-groups');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::MODEL_GROUPS_STEP,
+            'dataModelClass' => PartsBook::class,
+            'apiMethod' => '/model-groups'
+        ]));
     }
 
     /**
@@ -76,16 +80,16 @@ class ModelGroups extends AgconetBaseStep
             'categoryId' => $this->model->key//'1dd2b039c0b9233051cde35dd6bde392'
         ]);
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        $this->model = $this->isChild ? $this->getParentInstance() : PartsBook::findOne(['status_parser' => STATUS_PARSER_NEW]);
-
-        if ($this->isParen && !empty($this->model)) {
-            $this->setParentInstance($this->stepTitle, $this->model);
-        }
-    }
+//
+//    /**
+//     * @inheritDoc
+//     */
+//    public function init()
+//    {
+//        $this->model = $this->isChild ? $this->getParentInstance() : PartsBook::findOne(['status_parser' => STATUS_PARSER_NEW]);
+//
+//        if ($this->isParen && !empty($this->model)) {
+//            $this->setParentInstance($this->stepTitle, $this->model);
+//        }
+//    }
 }

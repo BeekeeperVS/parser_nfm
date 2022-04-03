@@ -7,18 +7,22 @@ use app\models\agconet\service\ParserStep;
 use app\models\agconet\service\PartsBook;
 use components\parser\agconet\enum\StepAgconetEnum;
 
+/**
+ * @property Brand $model
+ */
 class CatalogPats extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::CATALOG_PATS_STEP;
-    protected ?Brand $model;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('catalog-pats');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::CATALOG_PATS_STEP,
+            'dataModelClass' => Brand::class,
+            'apiMethod' => '/catalog-pats'
+        ]));
     }
 
     /**
@@ -74,16 +78,15 @@ class CatalogPats extends AgconetBaseStep
         ]);
     }
 
-
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        $this->model = $this->isChild ? $this->getParentInstance() : Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
-
-        if ($this->isParen) {
-            $this->setParentInstance($this->stepTitle, $this->model);
-        }
-    }
+//    /**
+//     * @inheritDoc
+//     */
+//    public function init()
+//    {
+//        $this->model = $this->isChild ? $this->getParentInstance() : Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
+//
+//        if ($this->isParen) {
+//            $this->setParentInstance($this->stepTitle, $this->model);
+//        }
+//    }
 }

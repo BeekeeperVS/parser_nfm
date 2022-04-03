@@ -7,15 +7,16 @@ use components\parser\agconet\enum\StepAgconetEnum;
 
 class Brands extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::BRANDS_STEP;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('brands');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::BRANDS_STEP,
+            'apiMethod' => '/brands'
+        ]));
     }
 
     /**
@@ -41,12 +42,4 @@ class Brands extends AgconetBaseStep
         }
     }
 
-
-//    /**
-//     * @return array
-//     */
-//    public function makeDataRequest(): array
-//    {
-//        return array_merge(parent::makeDataRequest(), []);
-//    }
 }

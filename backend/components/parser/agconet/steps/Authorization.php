@@ -2,21 +2,23 @@
 
 namespace components\parser\agconet\steps;
 
+use app\models\agconet\service\Model;
 use app\models\agconet\service\ParserStep;
 use app\service\fileGenerate\PhpConfigFileGenerateService;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 class Authorization extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::LOGIN_STEP;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('login');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::LOGIN_STEP,
+            'apiMethod' => '/login'
+        ]));
     }
 
     /**

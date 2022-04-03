@@ -6,18 +6,22 @@ use app\models\agconet\service\Brand;
 use app\models\agconet\service\ParserStep;
 use components\parser\agconet\enum\StepAgconetEnum;
 
+/**
+ * @property Brand $model
+ */
 class BrandItem extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::BRAND_ITEM_STEP;
-    protected ?Brand $model;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('brand-item');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::BRAND_ITEM_STEP,
+            'dataModelClass' => Brand::class,
+            'apiMethod' => '/brand-item'
+        ]));
     }
 
     /**
@@ -63,15 +67,15 @@ class BrandItem extends AgconetBaseStep
         ]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        $this->model = $this->isChild ? $this->getParentInstance() : Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
-
-        if ($this->isParen && !empty($this->model)) {
-            $this->setParentInstance($this->stepTitle, $this->model);
-        }
-    }
+//    /**
+//     * @inheritDoc
+//     */
+//    public function init()
+//    {
+//        $this->model = $this->isChild ? $this->getParentInstance() : Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
+//
+//        if ($this->isParen && !empty($this->model)) {
+//            $this->setParentInstance($this->stepTitle, $this->model);
+//        }
+//    }
 }

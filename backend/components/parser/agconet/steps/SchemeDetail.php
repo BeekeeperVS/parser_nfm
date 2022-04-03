@@ -3,20 +3,25 @@
 namespace components\parser\agconet\steps;
 
 use app\models\agconet\service\ParserStep;
+use app\models\agconet\service\Scheme;
 use components\parser\agconet\enum\StepAgconetEnum;
 
+/**
+ * @property Scheme $model
+ */
 class SchemeDetail extends AgconetBaseStep
 {
-    private string $stepTitle = StepAgconetEnum::SCHEME_DETAIL_STEP;
-    protected ?Brand $model;
 
     /**
      * @param $config
      */
     public function __construct($config = [])
     {
-        parent::__construct($config);
-        $this->setApiMethod('scheme-detail');
+        parent::__construct(array_merge($config, [
+            'stepTitle' => StepAgconetEnum::SCHEME_DETAIL_STEP,
+            'dataModelClass' => Scheme::class,
+            'apiMethod' => '/scheme-detail'
+        ]));
     }
 
     /**
@@ -54,10 +59,10 @@ class SchemeDetail extends AgconetBaseStep
     public function makeDataRequest(): array
     {
         return array_merge(parent::makeDataRequest(), [
-            'brandTitle' => 'generalpublications',
-            'modelId' => 4820992110,
-            'schemeId' => 2795168,
-            'tocGuid' => 'bf03b76a-fd7a-774f-354d-f9db0ba593a0'
+            'brandTitle' => $this->model->model->site_id,//'generalpublications',
+            'modelId' => $this->model->model->book_id,//4820992110,
+            'schemeId' => $this->model->site_id,
+            'tocGuid' => $this->model->key//'bf03b76a-fd7a-774f-354d-f9db0ba593a0'
         ]);
     }
 }
