@@ -67,15 +67,4 @@ class BrandItem extends AgconetBaseStep
         ]);
     }
 
-//    /**
-//     * @inheritDoc
-//     */
-//    public function init()
-//    {
-//        $this->model = $this->isChild ? $this->getParentInstance() : Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
-//
-//        if ($this->isParen && !empty($this->model)) {
-//            $this->setParentInstance($this->stepTitle, $this->model);
-//        }
-//    }
 }

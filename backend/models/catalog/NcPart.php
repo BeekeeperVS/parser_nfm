@@ -43,7 +43,7 @@ class NcPart extends \app\service\db\ActiveRecordService
     public function rules()
     {
         return [
-            [['number', 'name', 'image', 'usage', 'description', 'weight'], 'required'],
+            [['number', 'name', 'usage', 'description', 'weight'], 'required'],
             [['image', 'description'], 'string'],
             [['weight'], 'number'],
             [['created_at', 'updated_at'], 'safe'],

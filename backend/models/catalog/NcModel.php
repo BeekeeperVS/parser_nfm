@@ -45,8 +45,7 @@ class NcModel extends \app\service\db\ActiveRecordService
             [['series_id', 'name'], 'required'],
             [['series_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['external_id'], 'string', 'max' => 50],
-            [['name'], 'string', 'max' => 191],
+            [['external_id','name'], 'string', 'max' => 255],
             [['external_id'], 'unique'],
             [['series_id'], 'exist', 'skipOnError' => true, 'targetClass' => NcSeries::className(), 'targetAttribute' => ['series_id' => 'id']],
         ];

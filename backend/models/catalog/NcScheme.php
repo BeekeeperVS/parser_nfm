@@ -44,7 +44,7 @@ class NcScheme extends \app\service\db\ActiveRecordService
     public function rules()
     {
         return [
-            [['external_id', 'model_id', 'section_id', 'name', 'assembly_image'], 'required'],
+            [['external_id', 'model_id', 'name', 'assembly_image'], 'required'],
             [['model_id', 'section_id'], 'integer'],
             [['assembly_image'], 'string'],
             [['created_at', 'updated_at'], 'safe'],

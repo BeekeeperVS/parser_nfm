@@ -5,6 +5,9 @@ namespace components\parser\agconet\steps;
 use app\models\agconet\service\ModelGroup;
 use app\models\agconet\service\ParserStep;
 use app\models\agconet\service\PartsBook;
+use app\models\catalog\NcProductGroup;
+use app\models\catalog\NcProductType;
+use app\models\catalog\NcSeries;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 /**
@@ -56,6 +59,8 @@ class ModelGroups extends AgconetBaseStep
                     if (!$modelGroup->save()) {
                         print_r($modelGroup->errors);
                     }
+
+                    $this->saveNcCatalog($key, $name);
                 }
 
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
@@ -80,16 +85,29 @@ class ModelGroups extends AgconetBaseStep
             'categoryId' => $this->model->key//'1dd2b039c0b9233051cde35dd6bde392'
         ]);
     }
-//
-//    /**
-//     * @inheritDoc
-//     */
-//    public function init()
-//    {
-//        $this->model = $this->isChild ? $this->getParentInstance() : PartsBook::findOne(['status_parser' => STATUS_PARSER_NEW]);
-//
-//        if ($this->isParen && !empty($this->model)) {
-//            $this->setParentInstance($this->stepTitle, $this->model);
-//        }
-//    }
+
+    /**
+     * @param string $key
+     * @param string $name
+     * @return void
+     */
+    private function saveNcCatalog(string $key, string $name)
+    {
+        $ncProductType = NcProductType::findOne(['external_id' => $this->model->key]);
+
+        if(empty($ncProductType)) return;
+
+        $ncProductGroup = new NcProductGroup();
+        $ncSeries = new NcSeries();
+
+        $ncProductGroup->name = $ncSeries->name = $name;
+        $ncProductGroup->external_id = $ncSeries->external_id = $key;
+        $ncProductGroup->product_type_id = $ncProductType->id;
+
+        if($ncProductGroup->save()){
+            $ncSeries->product_group_id = $ncProductGroup->id;
+            $ncSeries->save();
+        }
+    }
+
 }

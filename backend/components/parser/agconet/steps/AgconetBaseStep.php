@@ -154,7 +154,7 @@ abstract class AgconetBaseStep extends BaseObject implements AgconetStepInterfac
     public function makeDataRequest(): array
     {
         return [
-            'bearerToken' => \Yii::$app->params['agconetConfig']['bearerToken'],
+            'bearerToken' => \Yii::$app->params['agconetConfig']['bearerToken'] ?? null,
         ];
     }
 

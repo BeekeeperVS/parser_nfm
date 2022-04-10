@@ -5,6 +5,8 @@ namespace components\parser\agconet\steps;
 use app\models\agconet\service\Brand;
 use app\models\agconet\service\ParserStep;
 use app\models\agconet\service\PartsBook;
+use app\models\catalog\NcBrand;
+use app\models\catalog\NcProductType;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 /**
@@ -55,6 +57,7 @@ class CatalogPats extends AgconetBaseStep
                     if (!$partsBook->save()) {
                         print_r($partsBook->errors);
                     }
+                    $this->saveNcCatalog($key, $name);
                 }
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
 
@@ -78,15 +81,20 @@ class CatalogPats extends AgconetBaseStep
         ]);
     }
 
-//    /**
-//     * @inheritDoc
-//     */
-//    public function init()
-//    {
-//        $this->model = $this->isChild ? $this->getParentInstance() : Brand::findOne(['status_parser' => STATUS_PARSER_NEW]);
-//
-//        if ($this->isParen) {
-//            $this->setParentInstance($this->stepTitle, $this->model);
-//        }
-//    }
+    /**
+     * @param string $key
+     * @param string $name
+     * @return void
+     * @throws \yii\db\Exception
+     */
+    private function saveNcCatalog(string $key, string $name)
+    {
+        $ncBrand = NcBrand::findOne(['name' => $this->model->name]);
+        if(empty($ncBrand)) return;
+        NcProductType::getDb()->createCommand()->insert(NcProductType::tableName(), [
+            'external_id' => $key,
+            'brand_id' => $ncBrand->id,
+            'name' => $name
+        ])->execute();
+    }
 }

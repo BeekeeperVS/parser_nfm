@@ -5,6 +5,7 @@ namespace components\parser\agconet\steps;
 use app\models\agconet\service\Model;
 use app\models\agconet\service\ModelGroup;
 use app\models\agconet\service\ParserStep;
+use app\models\catalog\NcSeries;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 /**
@@ -78,15 +79,4 @@ class Models extends AgconetBaseStep
         ]);
     }
 
-//    /**
-//     * @inheritDoc
-//     */
-//    public function init()
-//    {
-//        $this->model = $this->isChild ? $this->getParentInstance() : ModelGroup::findOne(['status_parser' => STATUS_PARSER_NEW]);
-//
-//        if ($this->isParen && !empty($this->model)) {
-//            $this->setParentInstance($this->stepTitle, $this->model);
-//        }
-//    }
 }

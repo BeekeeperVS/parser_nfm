@@ -5,6 +5,10 @@ namespace components\parser\agconet\steps;
 use app\models\agconet\service\ParserStep;
 use app\models\agconet\service\Part;
 use app\models\agconet\service\Scheme;
+use app\models\catalog\NcModel;
+use app\models\catalog\NcPart;
+use app\models\catalog\NcScheme;
+use app\models\catalog\NcSchemePart;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 /**
@@ -66,6 +70,8 @@ class SchemeDetail extends AgconetBaseStep
                         if (!$part->save()) {
                             print_r($part->errors);
                         }
+
+                        $this->saveNcCatalog($part);
                     }
                 }
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
@@ -90,5 +96,47 @@ class SchemeDetail extends AgconetBaseStep
             'schemeId' => $this->model->site_id,
             'tocGuid' => $this->model->key//'bf03b76a-fd7a-774f-354d-f9db0ba593a0'
         ]);
+    }
+
+
+    /**
+     * @param Part $part
+     * @return void
+     */
+    private function saveNcCatalog(Part $agcPart)
+    {
+        $ncModel = NcModel::findOne(['external_id' => $this->model->model->key]);
+        $ncScheme = NcScheme::findOne(['external_id' => $this->model->key]);
+
+        if (empty($ncModel)) return;
+        if (empty($ncScheme)) {
+            $ncScheme = new NcScheme();
+            $ncScheme->external_id = $this->model->key;
+            $ncScheme->model_id = $ncModel->id;
+            $ncScheme->name = $this->model->name;
+            $ncScheme->assembly_image = $this->model->image_url;
+            $ncScheme->save();
+        }
+
+
+        $ncPart = new NcPart();
+        $ncPart->number = $agcPart->article ?: '-';
+        $ncPart->name = $agcPart->name ?? $agcPart->specification ?? '-';
+        $ncPart->description = $agcPart->specification ?: '-';
+        $ncPart->usage = '-';
+        $ncPart->weight = 0;
+
+        if (!empty($ncPart->name) && $ncPart->name != '-' && $ncPart->save()) {
+            $ncSchemePart = new NcSchemePart();
+            $ncSchemePart->scheme_id = $ncScheme->id;
+            $ncSchemePart->part_id = $ncPart->id;
+            $ncSchemePart->position = (string)$agcPart->item_id;
+            $ncSchemePart->quantity = $agcPart->quantity;
+            $ncSchemePart->save();
+            print_r($ncSchemePart->errors);
+        } else {
+            print_r($ncPart->errors);
+        }
+
     }
 }

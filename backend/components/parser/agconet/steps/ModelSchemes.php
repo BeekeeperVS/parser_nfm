@@ -4,6 +4,8 @@ namespace components\parser\agconet\steps;
 
 use app\models\agconet\service\Model;
 use app\models\agconet\service\ParserStep;
+use app\models\catalog\NcModel;
+use app\models\catalog\NcSeries;
 use components\parser\agconet\enum\StepAgconetEnum;
 
 
@@ -50,6 +52,8 @@ class ModelSchemes extends AgconetBaseStep
                     print_r($this->model->errors);
                 }
 
+                $this->saveNcCatalog();
+
                 $this->model->status_parser = STATUS_PARSER_COMPLETE;
 
             } else {
@@ -72,16 +76,22 @@ class ModelSchemes extends AgconetBaseStep
         ]);
     }
 
-//    /**
-//     * @inheritDoc
-//     */
-//    public function init()
-//    {
-//        $this->model = $this->isChild ? $this->getParentInstance() : Model::findOne(['status_parser' => STATUS_PARSER_NEW]);
-//
-//        if ($this->isParen && !empty($this->model)) {
-//            $this->setParentInstance($this->stepTitle, $this->model);
-//        }
-//    }
+    /**
+     * @return void
+     */
+    private function saveNcCatalog()
+    {
+        $ncSeries = NcSeries::findOne(['external_id' => $this->model->model->key]);
 
+        if (empty($ncSeries)) return;
+
+        $ncModel = new NcModel();
+        $ncModel->external_id = $this->model->key;
+        $ncModel->series_id = $ncSeries->id;
+        $ncModel->name = $this->model->name;
+        if (!$ncModel->save()) {
+            print_r($ncModel->errors);
+        }
+
+    }
 }
